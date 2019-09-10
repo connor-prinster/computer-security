@@ -26,11 +26,13 @@ public class Main {
         String compositeKey = getCompositeKey(columnarComposite, polybiusSquare);
         System.out.println(compositeKey);
 
+        // take out whitespace from the message
+        String message = args[1].replaceAll("\\s", "");
         // get the columnar transposition
-        String columnarTrasposed = Transposer.ColumnarTransposition(args[1], compositeKey);
-        System.out.println(columnarTrasposed);
+        String columnarTransposed = Transposer.ColumnarTransposition(message, compositeKey);
+        System.out.println(columnarTransposed);
 
-        System.out.println(getOneTimePad(columnarTrasposed, polybiusSquare, oneTimePadKey));
+        System.out.println(getOneTimePad(columnarTransposed, polybiusSquare, oneTimePadKey));
     }
 
     private static String getCompositeKey(char[] compositeNums, char[][] polybiusSquare) {
