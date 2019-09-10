@@ -1,8 +1,6 @@
 package com.company.password;
 
 
-
-
 public class Main {
 
     public static void main(String[] args) { // First argument should be the composite key
@@ -40,7 +38,10 @@ public class Main {
         String compositeKey = getCompositeKey(columnarComposite, polybiusSquare);
         System.out.println(compositeKey);
 
-        getOneTimePad(compositeKey, polybiusSquare, oneTimePadKey);
+        String columnarTrasposed = Transposer.ColumnarTransposition(args[1], compositeKey);
+        System.out.println(columnarTrasposed);
+
+        System.out.println(getOneTimePad(columnarTrasposed, polybiusSquare, oneTimePadKey));
     }
 
     private static String getCompositeKey(char[] compositeNums, char[][] polybiusSquare) {
@@ -56,18 +57,32 @@ public class Main {
 
     private static String getOneTimePad(String columnarCipherText, char[][] polybiusSquare, int padKey) {
         char[] columnarLetters = columnarCipherText.toCharArray();
-        String binaryPadKey = "000000" + Integer.toBinaryString(padKey);
-        binaryPadKey = binaryPadKey.substring(binaryPadKey.length()-6,binaryPadKey.length());
-        System.out.println(binaryPadKey);
+        String cipherText = "";
+//        String binaryPadKey = "000000" + Integer.toBinaryString(padKey);
+//        binaryPadKey = binaryPadKey.substring(binaryPadKey.length()-8,binaryPadKey.length());
+//        byte binKeyNum = Byte.parseByte(binaryPadKey, 2);
+//        System.out.println("binKeyNum is " + binKeyNum);
         for (char columnarLetter : columnarLetters) {
             int polyNum = getPolybiusNumber(columnarLetter, polybiusSquare);
             System.out.println(polyNum);
-            String binaryNumber = "000000" + Integer.toBinaryString(polyNum);
-            binaryNumber = binaryNumber.substring(binaryNumber.length()-6,binaryNumber.length());
+//            String binaryNumber = "000000" + Integer.toBinaryString(polyNum);
+//            binaryNumber = binaryNumber.substring(binaryNumber.length()-8, binaryNumber.length());
+//            int binNum = Byte.parseByte(binaryNumber, 2);
+//            System.out.println("binNum is " + binNum);
+//            int result = Integer.parseInt(Integer.toString(binNum ^ binKeyNum));
+//            System.out.println(result);
+            int result = padKey ^ polyNum;
+            System.out.println("result is " + result);
+            if (result < 10) {
+                cipherText += ("0" + result);
+            }
+            else {
+                cipherText += result;
+            }
         }
 
 
-        return null;
+        return cipherText;
     }
 
     private static int getPolybiusNumber(char character, char[][] polybiusSquare) {
