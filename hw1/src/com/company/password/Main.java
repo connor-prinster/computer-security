@@ -21,20 +21,6 @@ public class Main {
         System.out.println(columnarComposite);
         System.out.println(oneTimePadKey);
 
-        String a = "a";
-        String b = "b";
-        String ab = a+b;
-        System.out.println(ab);
-
-        int one = 1;
-        byte juan = (byte)one;
-        System.out.println(juan);
-
-        int num1 = 5;
-        int num2 = 6;
-        String combinedNums = Integer.toString(num1) + Integer.toString(num2);
-        System.out.println(combinedNums);
-
         String compositeKey = getCompositeKey(columnarComposite, polybiusSquare);
         System.out.println(compositeKey);
 
@@ -58,19 +44,9 @@ public class Main {
     private static String getOneTimePad(String columnarCipherText, char[][] polybiusSquare, int padKey) {
         char[] columnarLetters = columnarCipherText.toCharArray();
         String cipherText = "";
-//        String binaryPadKey = "000000" + Integer.toBinaryString(padKey);
-//        binaryPadKey = binaryPadKey.substring(binaryPadKey.length()-8,binaryPadKey.length());
-//        byte binKeyNum = Byte.parseByte(binaryPadKey, 2);
-//        System.out.println("binKeyNum is " + binKeyNum);
         for (char columnarLetter : columnarLetters) {
             int polyNum = getPolybiusNumber(columnarLetter, polybiusSquare);
             System.out.println(polyNum);
-//            String binaryNumber = "000000" + Integer.toBinaryString(polyNum);
-//            binaryNumber = binaryNumber.substring(binaryNumber.length()-8, binaryNumber.length());
-//            int binNum = Byte.parseByte(binaryNumber, 2);
-//            System.out.println("binNum is " + binNum);
-//            int result = Integer.parseInt(Integer.toString(binNum ^ binKeyNum));
-//            System.out.println(result);
             int result = padKey ^ polyNum;
             System.out.println("result is " + result);
             if (result < 10) {
@@ -80,7 +56,6 @@ public class Main {
                 cipherText += result;
             }
         }
-
 
         return cipherText;
     }
