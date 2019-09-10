@@ -1,6 +1,8 @@
 package com.company.password;
 
 
+
+
 public class Main {
 
     public static void main(String[] args) { // First argument should be the composite key
@@ -26,8 +28,19 @@ public class Main {
         String ab = a+b;
         System.out.println(ab);
 
+        int one = 1;
+        byte juan = (byte)one;
+        System.out.println(juan);
+
+        int num1 = 5;
+        int num2 = 6;
+        String combinedNums = Integer.toString(num1) + Integer.toString(num2);
+        System.out.println(combinedNums);
+
         String compositeKey = getCompositeKey(columnarComposite, polybiusSquare);
         System.out.println(compositeKey);
+
+        getOneTimePad(compositeKey, polybiusSquare, oneTimePadKey);
     }
 
     private static String getCompositeKey(char[] compositeNums, char[][] polybiusSquare) {
@@ -39,5 +52,34 @@ public class Main {
             compositeKey += polybiusSquare[column][row];
         }
         return compositeKey;
+    }
+
+    private static String getOneTimePad(String columnarCipherText, char[][] polybiusSquare, int padKey) {
+        char[] columnarLetters = columnarCipherText.toCharArray();
+        String binaryPadKey = "000000" + Integer.toBinaryString(padKey);
+        binaryPadKey = binaryPadKey.substring(binaryPadKey.length()-6,binaryPadKey.length());
+        System.out.println(binaryPadKey);
+        for (char columnarLetter : columnarLetters) {
+            int polyNum = getPolybiusNumber(columnarLetter, polybiusSquare);
+            System.out.println(polyNum);
+            String binaryNumber = "000000" + Integer.toBinaryString(polyNum);
+            binaryNumber = binaryNumber.substring(binaryNumber.length()-6,binaryNumber.length());
+        }
+
+
+        return null;
+    }
+
+    private static int getPolybiusNumber(char character, char[][] polybiusSquare) {
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                if (character == polybiusSquare[i][j]) {
+                    String cell = Integer.toString(i) + Integer.toString(j);
+                    return Integer.parseInt(cell);
+                }
+            }
+        }
+
+        return -1;
     }
 }
