@@ -1,6 +1,5 @@
 package com.company.password;
 
-
 public class Main {
 
     public static void main(String[] args) { // First argument should be the composite key
@@ -70,7 +69,7 @@ public class Main {
     private static int getPolybiusNumber(char character, char[][] polybiusSquare) {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
-                if (character == polybiusSquare[i][j]) {
+                if (Character.toUpperCase(character) == polybiusSquare[i][j]) {
                     String cell = Integer.toString(i) + Integer.toString(j);
                     return Integer.parseInt(cell);
                 }
