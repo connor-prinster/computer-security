@@ -3,14 +3,8 @@ package com.company.password;
 public class Main {
 
     public static void main(String[] args) { // First argument should be the composite key
-        // new 6x6 square to hold the polybius square
-        char[][] polybiusSquare = new char[6][6];
-        String polybius = "E2RFZMYH30B7OQANUKPXJ4VWD18GC69IS5TL";
-        char[] polybius2 = polybius.toCharArray();
-        // fill in the polybius square
-        for (int i = 0; i < 36; i++) {
-            polybiusSquare[i/6][i%6] = polybius2[i];
-        }
+
+        char[][] polybiusSquare = makePolybiusSquare("E2RFZMYH30B7OQANUKPXJ4VWD18GC69IS5TL");
 
         // get the last two integers for the one time pad
         int oneTimePadKey = Integer.parseInt(args[0].substring(args[0].length()-2));
@@ -26,6 +20,18 @@ public class Main {
         String columnarTransposed = Transposer.ColumnarTransposition(message, compositeKey);
 
         System.out.println(getOneTimePadEncryption(columnarTransposed, polybiusSquare, oneTimePadKey));
+    }
+
+    private static char[][] makePolybiusSquare(String polybius) {
+        // new 6x6 square to hold the polybius square
+        char[][] polybiusSquare = new char[6][6];
+        char[] polybius2 = polybius.toCharArray();
+        // fill in the polybius square
+        for (int i = 0; i < 36; i++) {
+            polybiusSquare[i/6][i%6] = polybius2[i];
+        }
+
+        return polybiusSquare;
     }
 
     private static String getCompositeKey(char[] compositeNums, char[][] polybiusSquare) {
