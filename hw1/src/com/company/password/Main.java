@@ -19,7 +19,15 @@ public class Main {
         // get the columnar transposition
         String columnarTransposed = Transposer.ColumnarTransposition(message, compositeKey);
 
-        System.out.println(getOneTimePadEncryption(columnarTransposed, polybiusSquare, oneTimePadKey));
+        String encrypted = getOneTimePadEncryption(columnarTransposed, polybiusSquare, oneTimePadKey);
+
+        System.out.println(encrypted);
+
+        String decrypted = oneTimePadDecrypt(encrypted, polybiusSquare, oneTimePadKey);
+        System.out.println(decrypted);
+
+        System.out.println(Transposer.ReverseColumnarTransposition(decrypted, compositeKey));
+
     }
 
     private static char[][] makePolybiusSquare(String polybius) {
@@ -46,6 +54,19 @@ public class Main {
             compositeKey += polybiusSquare[column][row];
         }
         return compositeKey;
+    }
+
+    private static String oneTimePadDecrypt(String cipherText, char[][] polybiusSquare, int padKey) {
+        String undone = "";
+        for(int i = 0; i < cipherText.length() / 2; i++) {
+            int a = Integer.parseInt(cipherText.substring(i * 2, (i * 2) + 2));
+            int b = padKey ^ a;
+
+            int row = b / 10;
+            int col = b % 10;
+            undone += polybiusSquare[row][col];
+        }
+        return undone;
     }
 
     private static String getOneTimePadEncryption(String columnarCipherText, char[][] polybiusSquare, int padKey) {
