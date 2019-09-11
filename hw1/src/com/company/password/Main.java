@@ -9,30 +9,23 @@ public class Main {
         char[] polybius2 = polybius.toCharArray();
         // fill in the polybius square
         for (int i = 0; i < 36; i++) {
-            polybiusSquare[i/6][i%6] = polybius2[i];      }
-        for (int i = 0; i < 36; i++) {
-            if (i%6 == 0) System.out.println();
-            System.out.print(polybiusSquare[i/6][i%6]);
+            polybiusSquare[i/6][i%6] = polybius2[i];
         }
 
         // get the last two integers for the one time pad
         int oneTimePadKey = Integer.parseInt(args[0].substring(args[0].length()-2));
         // a char array of integers to be passed into the composite key function
         char[] columnarComposite = args[0].substring(0, args[0].length()-2).toCharArray();
-        System.out.println(columnarComposite);
-        System.out.println(oneTimePadKey);
 
         // get the composite key from the polybius square
         String compositeKey = getCompositeKey(columnarComposite, polybiusSquare);
-        System.out.println(compositeKey);
 
         // take out whitespace from the message
         String message = args[1].replaceAll("\\s", "");
         // get the columnar transposition
         String columnarTransposed = Transposer.ColumnarTransposition(message, compositeKey);
-        System.out.println(columnarTransposed);
 
-        System.out.println(getOneTimePad(columnarTransposed, polybiusSquare, oneTimePadKey));
+        System.out.println(getOneTimePadEncryption(columnarTransposed, polybiusSquare, oneTimePadKey));
     }
 
     private static String getCompositeKey(char[] compositeNums, char[][] polybiusSquare) {
@@ -49,14 +42,14 @@ public class Main {
         return compositeKey;
     }
 
-    private static String getOneTimePad(String columnarCipherText, char[][] polybiusSquare, int padKey) {
+    private static String getOneTimePadEncryption(String columnarCipherText, char[][] polybiusSquare, int padKey) {
         char[] columnarLetters = columnarCipherText.toCharArray();
         String cipherText = "";
         for (char columnarLetter : columnarLetters) {
+            // get the polybius number
             int polyNum = getPolybiusNumber(columnarLetter, polybiusSquare);
-            System.out.println(polyNum);
+            // xor the padKey
             int result = padKey ^ polyNum;
-            System.out.println("result is " + result);
             if (result < 10) {
                 cipherText += ("0" + result);
             }
