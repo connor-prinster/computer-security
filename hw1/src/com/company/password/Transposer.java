@@ -46,7 +46,7 @@ public class Transposer {
         // Initialize characters to '0' for padding
         for(int i = 0; i < height; i++) {
             for(int j = 0; j < width; j++) {
-                matrix[i][j] = '0';
+                matrix[i][j] = Character.MIN_VALUE;
             }
         }
         // Assign characters to the matrix according to the width
