@@ -72,7 +72,8 @@ public class Main {
         int oneTimePadKey = Integer.parseInt(args[0].substring(args[0].length()-2));
 
         // take out whitespace from the message
-        String message = args[1].replaceAll("\\s", "");
+        String message = args[1].replaceAll("\\s", "").replaceAll("\"[^a-zA-Z0-9]\"","");
+        message = message.replaceAll("[^a-zA-Z0-9]","");
         // get the columnar transposition
         String columnarTransposed = Transposer.ColumnarTransposition(message, compositeKey);
 
