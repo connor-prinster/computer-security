@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
 
         // generate the polybius square
-        char[][] polybiusSquare = makePolybiusSquare("E2RFZMYH30B7OQANUKPXJ4VWD18GC69IS5TL");
+        char[][] polybiusSquare = makePolybiusSquare();
 
         if(args.length > 0) {
             withArguments(args, polybiusSquare);
@@ -76,12 +76,11 @@ public class Main {
         // get the columnar transposition
         String columnarTransposed = Transposer.ColumnarTransposition(message, compositeKey);
 
-        String encrypted = getOneTimePadEncryption(columnarTransposed, polybiusSquare, oneTimePadKey);
-
-        return encrypted;
+        return getOneTimePadEncryption(columnarTransposed, polybiusSquare, oneTimePadKey);
     }
 
-    private static char[][] makePolybiusSquare(String polybius) {
+    private static char[][] makePolybiusSquare() {
+        String polybius = "E2RFZMYH30B7OQANUKPXJ4VWD18GC69IS5TL";
         // new 6x6 square to hold the polybius square
         char[][] polybiusSquare = new char[6][6];
         char[] polybius2 = polybius.toCharArray();
