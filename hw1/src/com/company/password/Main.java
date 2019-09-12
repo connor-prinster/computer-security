@@ -1,27 +1,33 @@
 package com.company.password;
 
-import java.util.Scanner;
-
 public class Main {
 
-    // 1422555515 "attack at dawn"
+    // composite key = 1422555515
+    // encrypted 572225253539572544255724
+    // message "attack at dawn"
 
     // First argument should be the composite key,
     // second should be en/decrypted line,
     // third should be e, d, or null for encryption, decryption, or both respectively
     public static void main(String[] args) {
 
-        // generate the polybius square
-        char[][] polybiusSquare = makePolybiusSquare();
-
+        // make sure there are actually arguments done
         if(args.length > 0) {
-            withArguments(args, polybiusSquare);
+            withArguments(args);
         } else {
             System.out.println("No arguments given\n");
         }
+
     }
 
-    private static void withArguments(String args[], char[][] polybiusSquare) {
+    /***
+     * the user passed in at least a few arguments
+     * @param args there were arguments given by the user
+     */
+    private static void withArguments(String args[]) {
+        // generate the polybius square
+        char[][] polybiusSquare = makePolybiusSquare("E2RFZMYH30B7OQANUKPXJ4VWD18GC69IS5TL");
+
         // get the last two integers for the one time pad
         int oneTimePadKey = Integer.parseInt(args[0].substring(args[0].length()-2));
 
@@ -38,16 +44,20 @@ public class Main {
         // if there are only two inputs (no e or d), don't attempt to access args[2]
         // and just run the program looking for encrypting AND decrypting
         if(args.length > 2) {
+            // should encrypt it
             if(args[2].toLowerCase().equals("e")) {
                 encrypted = encrypt(args, polybiusSquare, compositeKey);
                 System.out.println("Encrypted: " + encrypted);
-            } else if (args[2].toLowerCase().equals("d")) {
+            }
+            // will decrypt it
+            else if (args[2].toLowerCase().equals("d")) {
                 decrypted = Transposer.ReverseColumnarTransposition(
                         oneTimePadDecrypt(args[1], polybiusSquare, oneTimePadKey),
                         compositeKey
                 );
                 System.out.println("Decrypted: " + decrypted);
             }
+            // will both encrypt and decrypt
             else {
                 doBoth(args, polybiusSquare, compositeKey, oneTimePadKey);
             }
@@ -56,10 +66,21 @@ public class Main {
         }
     }
 
+    /***
+     * the user did not give any indication of if they wanted to encrypt or decrypt the text, so we assume they want both
+     * @param args arguments given by user
+     * @param polybiusSquare 2x2 square of chars
+     * @param compositeKey composite key
+     * @param oneTimePadKey one time pad key to use in both encryption and decryption
+     */
     private static void doBoth(String[] args, char[][] polybiusSquare, String compositeKey, int oneTimePadKey) {
         System.out.println("No specific instruction given. Will encrypt and decrypt\n");
+
+        // grab encrypted text
         String encrypted = encrypt(args, polybiusSquare, compositeKey);
         System.out.println("Encrypted: " + encrypted);
+
+        // grab decrypted text
         String decrypted = Transposer.ReverseColumnarTransposition(
                 oneTimePadDecrypt(encrypted, polybiusSquare, oneTimePadKey),
                 compositeKey
@@ -67,20 +88,34 @@ public class Main {
         System.out.println("Decrypted: " + decrypted);
     }
 
+    /***
+     * the user wishes to encrypt the plaintext
+     * @param args the arguments passed in from the user
+     * @param polybiusSquare the 2x2 polybius square
+     * @param compositeKey the composite key
+     * @return the completely encrypted key
+     */
     private static String encrypt(String[] args, char[][] polybiusSquare, String compositeKey) {
         // get the last two integers for the one time pad
         int oneTimePadKey = Integer.parseInt(args[0].substring(args[0].length()-2));
 
         // take out whitespace from the message
-        String message = args[1].replaceAll("\\s", "");
+        String message = args[1].replaceAll("\\s", "").replaceAll("\"[^a-zA-Z0-9]\"","");
+        message = message.replaceAll("[^a-zA-Z0-9]","");
         // get the columnar transposition
         String columnarTransposed = Transposer.ColumnarTransposition(message, compositeKey);
 
-        return getOneTimePadEncryption(columnarTransposed, polybiusSquare, oneTimePadKey);
+        String encrypted = getOneTimePadEncryption(columnarTransposed, polybiusSquare, oneTimePadKey);
+
+        return encrypted;
     }
 
-    private static char[][] makePolybiusSquare() {
-        String polybius = "E2RFZMYH30B7OQANUKPXJ4VWD18GC69IS5TL";
+    /***
+     * from a string of characters, make a 2x2 square
+     * @param polybius string of characters to make a polybius square out of
+     * @return a 2x2 polybius square
+     */
+    private static char[][] makePolybiusSquare(String polybius) {
         // new 6x6 square to hold the polybius square
         char[][] polybiusSquare = new char[6][6];
         char[] polybius2 = polybius.toCharArray();
@@ -92,10 +127,15 @@ public class Main {
         return polybiusSquare;
     }
 
+    /***
+     * get the composite key from the integer passed in
+     * @param compositeNums from the composite key
+     * @param polybiusSquare the 2x2 polybius square
+     * @return the text version of the integer composite key
+     */
     private static String getCompositeKey(char[] compositeNums, char[][] polybiusSquare) {
         String compositeKey = "";
-        // get two integers from the composite number (e.g. 123456) would give us
-        // 12, 34, 56
+        // get two integers from the composite number (e.g. 123456) would give us 12, 34, 56
         for (int i = 0; i < compositeNums.length; i+=2) {
             // from the two numbers retrieved from the array, use the first number as the column and the
             // second as the row
@@ -106,23 +146,42 @@ public class Main {
         return compositeKey;
     }
 
+    /***
+     * undo the one-time padding done based on the pad key
+     * @param cipherText the encoded text
+     * @param polybiusSquare the 2x2 polybius square
+     * @param padKey the pad key
+     * @return the result of undoing the pad
+     */
     private static String oneTimePadDecrypt(String cipherText, char[][] polybiusSquare, int padKey) {
         String undone = "";
         for(int i = 0; i < cipherText.length() / 2; i++) {
             int a = Integer.parseInt(cipherText.substring(i * 2, (i * 2) + 2));
+            // xor the previously padded key
             int b = padKey ^ a;
-
+            // 63 is the ASCII equivalent of the empty space
             if(b == 63) {
+                // empty space
                 undone += Character.MIN_VALUE;
             } else {
+                // get the cell by only getting the number in the 10s place
                 int row = b / 10;
+                // modulo the cell to get the number in the 1s place
                 int col = b % 10;
-                undone += polybiusSquare[row][col];
+                undone += polybiusSquare[row][col]; // add the text equivalent found in the square
             }
         }
+        // return the unpadded string
         return undone;
     }
 
+    /***
+     * pad the columnar transposed text by the padKey
+     * @param columnarCipherText the text that has been put through a columnar transposition
+     * @param polybiusSquare 2x2 polybius square
+     * @param padKey the int that we will pad the columnarCipherText with
+     * @return the final ciphertext
+     */
     private static String getOneTimePadEncryption(String columnarCipherText, char[][] polybiusSquare, int padKey) {
         char[] columnarLetters = columnarCipherText.toCharArray();
         String cipherText = "";
@@ -142,8 +201,15 @@ public class Main {
         return cipherText;
     }
 
+    /***
+     * given a character, search for the polybius square index (xy)
+     * @param character the char to look for in the polybius square
+     * @param polybiusSquare the 2x2 polybius square
+     * @return the 2 digit polybius number based on the cell
+     */
     private static int getPolybiusNumber(char character, char[][] polybiusSquare) {
         if(character == Character.MIN_VALUE) return 63;
+        // go through the whole square to search for a character
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
                 if (Character.toUpperCase(character) == polybiusSquare[i][j]) {
@@ -152,7 +218,6 @@ public class Main {
                 }
             }
         }
-
         return -1;
     }
 }
