@@ -24,9 +24,9 @@ public class Main {
      * the user passed in at least a few arguments
      * @param args there were arguments given by the user
      */
-    private static void withArguments(String args[]) {
+    private static void withArguments(String[] args) {
         // generate the polybius square
-        char[][] polybiusSquare = makePolybiusSquare("E2RFZMYH30B7OQANUKPXJ4VWD18GC69IS5TL");
+        char[][] polybiusSquare = makePolybiusSquare();
 
         // get the last two integers for the one time pad
         int oneTimePadKey = Integer.parseInt(args[0].substring(args[0].length()-2));
@@ -105,17 +105,15 @@ public class Main {
         // get the columnar transposition
         String columnarTransposed = Transposer.ColumnarTransposition(message, compositeKey);
 
-        String encrypted = getOneTimePadEncryption(columnarTransposed, polybiusSquare, oneTimePadKey);
-
-        return encrypted;
+       return getOneTimePadEncryption(columnarTransposed, polybiusSquare, oneTimePadKey);
     }
 
     /***
-     * from a string of characters, make a 2x2 square
-     * @param polybius string of characters to make a polybius square out of
-     * @return a 2x2 polybius square
+     * Using the string "E2RFZMYH30B7OQANUKPXJ4VWD18GC69IS5TL", make an square array
+     * @return a polybius square
      */
-    private static char[][] makePolybiusSquare(String polybius) {
+    private static char[][] makePolybiusSquare() {
+        String polybius = "E2RFZMYH30B7OQANUKPXJ4VWD18GC69IS5TL";
         // new 6x6 square to hold the polybius square
         char[][] polybiusSquare = new char[6][6];
         char[] polybius2 = polybius.toCharArray();
@@ -130,20 +128,20 @@ public class Main {
     /***
      * get the composite key from the integer passed in
      * @param compositeNums from the composite key
-     * @param polybiusSquare the 2x2 polybius square
+     * @param polybiusSquare the 2 dimensional polybius square
      * @return the text version of the integer composite key
      */
     private static String getCompositeKey(char[] compositeNums, char[][] polybiusSquare) {
-        String compositeKey = "";
+        StringBuilder compositeKey = new StringBuilder();
         // get two integers from the composite number (e.g. 123456) would give us 12, 34, 56
         for (int i = 0; i < compositeNums.length; i+=2) {
             // from the two numbers retrieved from the array, use the first number as the column and the
             // second as the row
             int column = Character.getNumericValue(compositeNums[i]);
             int row = Character.getNumericValue(compositeNums[i+1]);
-            compositeKey += polybiusSquare[column][row];
+            compositeKey.append(polybiusSquare[column][row]);
         }
-        return compositeKey;
+        return compositeKey.toString();
     }
 
     /***
@@ -154,7 +152,7 @@ public class Main {
      * @return the result of undoing the pad
      */
     private static String oneTimePadDecrypt(String cipherText, char[][] polybiusSquare, int padKey) {
-        String undone = "";
+        StringBuilder undone = new StringBuilder();
         for(int i = 0; i < cipherText.length() / 2; i++) {
             int a = Integer.parseInt(cipherText.substring(i * 2, (i * 2) + 2));
             // xor the previously padded key
@@ -162,17 +160,17 @@ public class Main {
             // 63 is the ASCII equivalent of the empty space
             if(b == 63) {
                 // empty space
-                undone += Character.MIN_VALUE;
+                undone.append(Character.MIN_VALUE);
             } else {
                 // get the cell by only getting the number in the 10s place
                 int row = b / 10;
                 // modulo the cell to get the number in the 1s place
                 int col = b % 10;
-                undone += polybiusSquare[row][col]; // add the text equivalent found in the square
+                undone.append(polybiusSquare[row][col]); // add the text equivalent found in the square
             }
         }
         // return the unpadded string
-        return undone;
+        return undone.toString();
     }
 
     /***
@@ -184,21 +182,21 @@ public class Main {
      */
     private static String getOneTimePadEncryption(String columnarCipherText, char[][] polybiusSquare, int padKey) {
         char[] columnarLetters = columnarCipherText.toCharArray();
-        String cipherText = "";
+        StringBuilder cipherText = new StringBuilder();
         for (char columnarLetter : columnarLetters) {
             // get the polybius number
             int polyNum = getPolybiusNumber(columnarLetter, polybiusSquare);
             // xor the padKey
             int result = padKey ^ polyNum;
             if (result < 10) {
-                cipherText += ("0" + result);
+                cipherText.append("0").append(result);
             }
             else {
-                cipherText += result;
+                cipherText.append(result);
             }
         }
 
-        return cipherText;
+        return cipherText.toString();
     }
 
     /***
@@ -213,7 +211,7 @@ public class Main {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
                 if (Character.toUpperCase(character) == polybiusSquare[i][j]) {
-                    String cell = Integer.toString(i) + Integer.toString(j);
+                    String cell = i + Integer.toString(j);
                     return Integer.parseInt(cell);
                 }
             }

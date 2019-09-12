@@ -1,6 +1,6 @@
 package com.company.password;
 
-public class Transposer {
+class Transposer {
 
     // composite key = 1422555515
     // encrypted 572225253539572544255724
@@ -12,8 +12,8 @@ public class Transposer {
      * @param key The string key
      * @return an array of integers representing the order of columns in the transposition
      */
-    public static int[] getKeyColumns(String key) {
-        key.replaceAll("\\[A-Za-z]", "");
+    private static int[] getKeyColumns(String key) {
+        key = key.replaceAll("\\[A-Za-z]", "");
 
         int[] columns = new int[key.length()]; // Initialize the integer array
         // Initialize the array to -1, since we need the 0 for the first column
@@ -45,7 +45,7 @@ public class Transposer {
      * @param key the key to transform by
      * @return the Columnar Transposed version of the input
      */
-    public static String ColumnarTransposition(String input, String key) {
+    static String ColumnarTransposition(String input, String key) {
         int[] order = getKeyColumns(key);   // Order of the columns
         int width = key.length();           // Width of the matrix
         int height = (int)Math.ceil((double)input.length() / (double)key.length()); // Height of the matrix
@@ -60,15 +60,15 @@ public class Transposer {
         for(int i = 0; i < input.length(); i++) {
             matrix[i / width][i % width] = input.charAt(i);
         }
-        String output = ""; // Initialize output
+        StringBuilder output = new StringBuilder(); // Initialize output
         for(int i = 0; i < width; i++) {
             int k = order[i]; // Current column given by the key
             // Loop through the matrix height first and add it to the output
             for(int j = 0; j < height; j++) {
-                output += matrix[j][k];
+                output.append(matrix[j][k]);
             }
         }
-        return output;
+        return output.toString();
     }
 
     /***
@@ -77,7 +77,7 @@ public class Transposer {
      * @param key the composite text
      * @return the plaintext
      */
-    public static String ReverseColumnarTransposition(String input, String key) {
+    static String ReverseColumnarTransposition(String input, String key) {
         // from the key, make sure the width and height are done correctly
         int[] order = getKeyColumns(key);
         int width = key.length();
@@ -90,12 +90,12 @@ public class Transposer {
                 matrix[j][k] = input.charAt((i * height) + j);
             }
         }
-        String output = "";
+        StringBuilder output = new StringBuilder();
         for(int i = 0; i < height; i++) {
             for(int j = 0; j < width; j++) {
-                output += matrix[i][j];
+                output.append(matrix[i][j]);
             }
         }
-        return output;
+        return output.toString();
     }
 }
