@@ -49,13 +49,7 @@ class Transposer {
         int[] order = getKeyColumns(key);   // Order of the columns
         int width = key.length();           // Width of the matrix
         int height = (int)Math.ceil((double)input.length() / (double)key.length()); // Height of the matrix
-        char[][] matrix = new char[height][width]; // A piece of pie
-        // Initialize characters to ''
-        for(int i = 0; i < height; i++) {
-            for(int j = 0; j < width; j++) {
-                matrix[i][j] = Character.MIN_VALUE;
-            }
-        }
+        char[][] matrix = new char[height][width]; // A piece of pi
         // Assign characters to the matrix according to the width
         for(int i = 0; i < input.length(); i++) {
             matrix[i / width][i % width] = input.charAt(i);
@@ -84,9 +78,12 @@ class Transposer {
         // the height of the matrix can be found by the length of the unpadded ciphertext divided by the length of the key
         int height = (int)Math.ceil((double)input.length() / (double)key.length());
         char[][] matrix = new char[height][width];
+        int tallColumns = input.length() % key.length();
         for(int i = 0; i < width; i++) {
             int k = order[i];
-            for(int j = 0; j < height; j++) {
+            int fillHeight = height;
+            if(k < tallColumns) fillHeight--;
+            for(int j = 0; j < fillHeight; j++) {
                 matrix[j][k] = input.charAt((i * height) + j);
             }
         }
