@@ -13,7 +13,7 @@ class Transposer {
      * @return an array of integers representing the order of columns in the transposition
      */
     private static int[] getKeyColumns(String key) {
-        key.replaceAll("\\[A-Za-z]", "");
+        key = key.replaceAll("\\[A-Za-z]", "");
 
         int[] columns = new int[key.length()]; // Initialize the integer array
         // Initialize the array to -1, since we need the 0 for the first column
