@@ -91,7 +91,7 @@ public class Main {
     /***
      * the user wishes to encrypt the plaintext
      * @param args the arguments passed in from the user
-     * @param polybiusSquare the 2x2 polybius square
+     * @param polybiusSquare the 6x6 polybius square
      * @param compositeKey the composite key
      * @return the completely encrypted key
      */
@@ -100,7 +100,7 @@ public class Main {
         int oneTimePadKey = Integer.parseInt(args[0].substring(args[0].length()-2));
 
         // take out whitespace from the message
-        String message = args[1].replaceAll("\\s", "").replaceAll("\"[^a-zA-Z0-9]\"","");
+        String message = args[1].replaceAll("\\s", "");
         message = message.replaceAll("[^a-zA-Z0-9]","");
         // get the columnar transposition
         String columnarTransposed = Transposer.ColumnarTransposition(message, compositeKey);
