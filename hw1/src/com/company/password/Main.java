@@ -1,35 +1,84 @@
 package com.company.password;
 
+import java.util.Scanner;
+
 public class Main {
 
-    public static void main(String[] args) { // First argument should be the composite key
+    // 1422555515 "attack at dawn"
 
+    // First argument should be the composite key,
+    // second should be en/decrypted line,
+    // third should be e, d, or null for encryption, decryption, or both respectively
+    public static void main(String[] args) {
+
+        // generate the polybius square
         char[][] polybiusSquare = makePolybiusSquare("E2RFZMYH30B7OQANUKPXJ4VWD18GC69IS5TL");
 
+        if(args.length > 0) {
+            withArguments(args, polybiusSquare);
+        } else {
+            System.out.println("No arguments given\n");
+        }
+    }
+
+    private static void withArguments(String args[], char[][] polybiusSquare) {
         // get the last two integers for the one time pad
         int oneTimePadKey = Integer.parseInt(args[0].substring(args[0].length()-2));
+
         // a char array of integers to be passed into the composite key function
-        char[] columnarComposite = args[0].substring(0, args[0].length()-2).toCharArray();
+        char[] columnarComposite = args[0]
+                .substring(0, args[0].length() - 2)
+                .toCharArray();
 
         // get the composite key from the polybius square
         String compositeKey = getCompositeKey(columnarComposite, polybiusSquare);
+
+        // will be used in all the below
+        String encrypted, decrypted;
+        // if there are only two inputs (no e or d), don't attempt to access args[2]
+        // and just run the program looking for encrypting AND decrypting
+        if(args.length > 2) {
+            if(args[2].toLowerCase().equals("e")) {
+                encrypted = encrypt(args, polybiusSquare, compositeKey);
+                System.out.println("Encrypted: " + encrypted);
+            } else if (args[2].toLowerCase().equals("d")) {
+                decrypted = Transposer.ReverseColumnarTransposition(
+                        oneTimePadDecrypt(args[1], polybiusSquare, oneTimePadKey),
+                        compositeKey
+                );
+                System.out.println("Decrypted: " + decrypted);
+            }
+            else {
+                doBoth(args, polybiusSquare, compositeKey, oneTimePadKey);
+            }
+        } else {
+            doBoth(args, polybiusSquare, compositeKey, oneTimePadKey);
+        }
+    }
+
+    private static void doBoth(String[] args, char[][] polybiusSquare, String compositeKey, int oneTimePadKey) {
+        System.out.println("No specific instruction given. Will encrypt and decrypt\n");
+        String encrypted = encrypt(args, polybiusSquare, compositeKey);
+        System.out.println("Encrypted: " + encrypted);
+        String decrypted = Transposer.ReverseColumnarTransposition(
+                oneTimePadDecrypt(encrypted, polybiusSquare, oneTimePadKey),
+                compositeKey
+        );
+        System.out.println("Decrypted: " + decrypted);
+    }
+
+    private static String encrypt(String[] args, char[][] polybiusSquare, String compositeKey) {
+        // get the last two integers for the one time pad
+        int oneTimePadKey = Integer.parseInt(args[0].substring(args[0].length()-2));
 
         // take out whitespace from the message
         String message = args[1].replaceAll("\\s", "");
         // get the columnar transposition
         String columnarTransposed = Transposer.ColumnarTransposition(message, compositeKey);
 
-        System.out.println(columnarTransposed);
-
         String encrypted = getOneTimePadEncryption(columnarTransposed, polybiusSquare, oneTimePadKey);
 
-        System.out.println(encrypted);
-
-        String decrypted = oneTimePadDecrypt(encrypted, polybiusSquare, oneTimePadKey);
-        System.out.println(decrypted);
-
-        System.out.println(Transposer.ReverseColumnarTransposition(decrypted, compositeKey));
-
+        return encrypted;
     }
 
     private static char[][] makePolybiusSquare(String polybius) {

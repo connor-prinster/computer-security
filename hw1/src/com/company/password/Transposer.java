@@ -1,6 +1,11 @@
 package com.company.password;
 
 public class Transposer {
+
+    // composite key = 1422555515
+    // encrypted 572225253539572544255724
+    // message "attack at dawn"
+
     /**
      * Takes an input key and returns an array of integers representing the order the characters appear in the
      * alphabet, or the columns in transposition.
