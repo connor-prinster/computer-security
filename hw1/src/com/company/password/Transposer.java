@@ -50,7 +50,7 @@ public class Transposer {
         int width = key.length();           // Width of the matrix
         int height = (int)Math.ceil((double)input.length() / (double)key.length()); // Height of the matrix
         char[][] matrix = new char[height][width]; // A piece of pie
-        // Initialize characters to '0' for padding
+        // Initialize characters to ''
         for(int i = 0; i < height; i++) {
             for(int j = 0; j < width; j++) {
                 matrix[i][j] = Character.MIN_VALUE;
@@ -70,9 +70,18 @@ public class Transposer {
         }
         return output;
     }
+
+    /***
+     *
+     * @param input the unpadded ciphertext
+     * @param key the composite text
+     * @return the plaintext
+     */
     public static String ReverseColumnarTransposition(String input, String key) {
+        // from the key, make sure the width and height are done correctly
         int[] order = getKeyColumns(key);
         int width = key.length();
+        // the height of the matrix can be found by the length of the unpadded ciphertext divided by the length of the key
         int height = (int)Math.ceil((double)input.length() / (double)key.length());
         char[][] matrix = new char[height][width];
         for(int i = 0; i < width; i++) {
