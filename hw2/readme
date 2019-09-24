@@ -1,0 +1,3 @@
+Make sure you have Gradle installed (https://gradle.org/install/) and have your JAVA_HOME and GRADLE_HOME environment variables set up.
+Build using `gradle build`, run using `gradle run`.
+Do both using `gradle build run`
