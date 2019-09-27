@@ -1,3 +1,5 @@
+package functions;
+
 /**
  * Decryption contains the private data members private_key and ciphertext. The method decrypt()
  * uses private_key, a private rsa key, to decrypt the encoded ciphertext into a plaintext message.

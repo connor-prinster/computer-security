@@ -1,3 +1,5 @@
+package functions;
+
 /**
  * Encryption contains the private data members public_key and plaintext. The method encrypt()
  * uses public_key, a public rsa key, to encrypt the plaintext message into an encoded ciphertext.
