@@ -53,6 +53,11 @@ public class GenerateKeys {
                 primeNumbers.add(i);
             }
         }
-        return primeNumbers.get(primeNumbers.size() - 1);
+        if(primeNumbers.size() == 0) {
+
+        }
+        return
+                primeNumbers.size() == 0 ? 0 :
+                        primeNumbers.get(primeNumbers.size() - 1);
     }
 }
