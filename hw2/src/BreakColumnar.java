@@ -1,6 +1,6 @@
 public class BreakColumnar {
 
-    public static final int MAX_KEY_LENGTH = 20;
+    public static final int MAX_KEY_LENGTH = 50;
 
     public static int[] Cryptanalize(String p, String c) {
         int[] keys;
@@ -25,9 +25,11 @@ public class BreakColumnar {
     }
 
     private static int getPositionWithinWidth(String a, char b, int width, int start) {
-        for(int i = start; i <= width; i++) {
+    //    System.out.println(String.format("Looking for %s within %s", b, a.substring(start, start+width)));
+        for(int i = start; i <= width + start; i++) {
             char test = a.charAt(i);
             if(test == b) {
+    //            System.out.println(String.format("Found at %d", i - start));
                 return i;
             }
         }
@@ -44,6 +46,7 @@ public class BreakColumnar {
             char cipherChar = c.charAt(cipherStart + i);
             if(plainStart + (i * width) >= p.length()) return true;
             char plainChar = p.charAt(plainStart + (i * width));
+    //        System.out.println(String.format("Testing %c with %c", cipherChar, plainChar));
             if(cipherChar != plainChar) return false;
         }
         return true;
@@ -51,11 +54,14 @@ public class BreakColumnar {
     private static int getKeyWidth(String p, String c) {
         char first = c.charAt(0);
         int width; 
-        for(int i = 1; i <= MAX_KEY_LENGTH; i++) {
+        for(int i = 0; i <= MAX_KEY_LENGTH; i++) {
             char test = p.charAt(i);
+        //    System.out.println(String.format("Trying at %d", i));
             if(test == first) {
                 for(width = 1; width <= MAX_KEY_LENGTH; width++) {
+        //            System.out.println(String.format("Trying width %d", width));
                     if(checkWidth(p, c, 0, i, width)) {
+        //                System.out.println(String.format("Key width is %d", width));
                         return width;
                     }
                 }
