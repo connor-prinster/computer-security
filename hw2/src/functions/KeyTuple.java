@@ -1,24 +1,54 @@
 package functions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class KeyTuple {
-    private int val1;
-    private int val2;
+    private int rpn;
+    private int m;
+    private int fn;
+    private int pd;
 
-    public KeyTuple(int a, int b) {
-        val1 = a;
-        val2 = b;
+    public KeyTuple(int rpn, int m, int fn) {
+        this.rpn = rpn;
+        this.m = m;
+        this.fn = fn;
+        this.pd = -1;
     }
 
-    public int getVal1() {
-        return val1;
+    public KeyTuple(int rpn, int m, int fn, int pd) {
+        this.rpn = rpn;
+        this.m = m;
+        this.fn = fn;
+        this.pd = pd;
     }
 
-    public int getVal2() {
-        return val2;
+
+
+    public int getRpn() {
+        return rpn;
+    }
+
+    public int getM() {
+        return m;
+    }
+
+    public int getFn() {
+        return fn;
+    }
+
+    public int getPd() {
+        return pd;
     }
 
     @Override
     public String toString() {
-        return "(" + val1 + ", " + val2 + ")";
+        // if 'pd' is -1, it is a public key
+        return (
+                (pd == -1) ?
+                        "\nPublic Key:\n(rpn: " + rpn + ", m: " + m + ", fn: " + fn + ")\n"
+                        :
+                        "\nPrivate Key:\n(rpn: " + rpn + ", pd: " + pd  + ", m:" + m + ", fn: " + fn + ")\n"
+        );
     }
 }
