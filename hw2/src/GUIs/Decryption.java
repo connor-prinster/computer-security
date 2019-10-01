@@ -15,7 +15,6 @@ public class Decryption extends Application {
     private Label plainText = new Label("");
     private TextField cipherText = new TextField();
 
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         BorderPane pane = new BorderPane();
