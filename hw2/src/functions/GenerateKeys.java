@@ -3,10 +3,10 @@ package functions;
 import java.util.*;
 
 public class GenerateKeys {
-    public static void main(String[] args) {
-        GenerateKeys gk = new GenerateKeys();
-        System.out.println(gk.getKeys());
-    }
+//    public static void main(String[] args) {
+//        GenerateKeys gk = new GenerateKeys();
+//        System.out.println(gk.getKeys());
+//    }
 
     /**
      * generates map containing public and private keys
