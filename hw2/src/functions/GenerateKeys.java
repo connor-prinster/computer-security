@@ -15,7 +15,9 @@ public class GenerateKeys {
     public static Map<String, Map<String, Integer>> getKeys() {
 
         // generate the private key
+//        System.out.println("about to generate primes");
         ArrayList<Integer> rands = generatePrimes(Math.random(), Math.random());
+//        System.out.println("primes generated");
         KeyTuple publicKey = generatePublic(rands.get(0), rands.get(1));
 
         // using the public key, generate the private one
@@ -81,7 +83,7 @@ public class GenerateKeys {
         while(!(modFunc == 1)) {
             pd++;
             modFunc = (rpn * pd) % fn;
-            System.out.println("pd: " + pd + " modFunc: " + modFunc);
+//            System.out.println("pd: " + pd + " modFunc: " + modFunc);
         }
         return pd;
     }
@@ -126,15 +128,16 @@ public class GenerateKeys {
         int idx2 = (int)(val2 * 1000) % arr.size();
 
         // if the indexes are the same, idx2 must be changed
+//        System.out.println("idx1: " + idx1 + " idx2: " + idx2);
         while(idx1 == idx2) {
-            idx2 = (int)(val2 * 1000) % arr.size();
+            idx2 = (int)(Math.random() * 1000) % arr.size();
         }
 
         // a pair of randomly chosen primes
         ArrayList<Integer> pair = new ArrayList<>();
         pair.add(arr.get(idx1));
         pair.add(arr.get(idx2));
-        System.out.println("indexes: " + pair.toString());
+//        System.out.println("indexes: " + pair.toString());
 
         // return this pair
         return pair;
