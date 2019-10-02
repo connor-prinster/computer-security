@@ -42,7 +42,6 @@ public class GeneratePublicPrivateKeys extends Application {
 //        String publicKey = generatePublicKey();
         //call the private method
 //        String privateKey = generatePrivateKey();
-        System.out.println("generating keys");
         Map<String, Map<String, Integer>> keys = GenerateKeys.getKeys();
 
         String publicDirectory = "public.key";
