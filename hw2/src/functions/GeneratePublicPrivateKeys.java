@@ -42,6 +42,7 @@ public class GeneratePublicPrivateKeys extends Application {
 //        String publicKey = generatePublicKey();
         //call the private method
 //        String privateKey = generatePrivateKey();
+        System.out.println("generating keys");
         Map<String, Map<String, Integer>> keys = GenerateKeys.getKeys();
 
         String publicDirectory = "public.key";
@@ -57,7 +58,7 @@ public class GeneratePublicPrivateKeys extends Application {
             writePublic.write(keys.get("public").get("m").toString() + "\n");
             writePublic.close();
         }catch(Exception e){System.out.println(e);}
-        System.out.println("Success...");
+        System.out.println("Success writing public...");
 
         try{
             FileWriter writePrivate = new FileWriter(privateDirectory);
@@ -65,7 +66,7 @@ public class GeneratePublicPrivateKeys extends Application {
             writePrivate.write(keys.get("private").get("m").toString() + "\n");
             writePrivate.close();
         }catch(Exception e){System.out.println(e);}
-        System.out.println("Success...");
+        System.out.println("Success writing private...");
 
         keysAndMessage.setText(keys.get("public").get("rpn") + "\n" + keys.get("private").get("pd") +
                 "\nThe Public Key has been stored in " + publicDirectory +
