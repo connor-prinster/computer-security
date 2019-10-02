@@ -12,7 +12,7 @@ public class GenerateKeys {
      * generates map containing public and private keys
      * @return a map of maps (each map a key)
      */
-    public Map<String, Map<String, Integer>> getKeys() {
+    public static Map<String, Map<String, Integer>> getKeys() {
 
         // generate the private key
         KeyTuple publicKey = generatePublic(
