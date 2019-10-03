@@ -2,6 +2,18 @@ public class BreakColumnar {
 
     public static final int MAX_KEY_LENGTH = 50;
 
+    public static void main(String[] args) {
+        String plaintext = "youneedtofindthekey";
+        String ciphertext = "ntneudihyyeodkoefte";
+
+        int[] key = Cryptanalize(plaintext, ciphertext);
+        for(int k : key) {
+            System.out.print(k);
+            System.out.print(' ');
+        }
+        System.out.println();
+    }
+
     public static int[] Cryptanalize(String p, String c) {
         int[] keys;
 
