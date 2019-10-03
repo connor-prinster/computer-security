@@ -1,4 +1,4 @@
 https://www.devglan.com/online-tools/rsa-encryption-decryption
-1024 bit RSA key size
+2048 bit RSA key size
 plain text message: "I am signing this message for a class assignment. The digital signature is used to assert that I myself have signed the message."
-RSA/ECB/PKCS1Padding
+RSA
