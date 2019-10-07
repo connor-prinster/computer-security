@@ -3,8 +3,8 @@ public class BreakColumnar {
     public static final int MAX_KEY_LENGTH = 50;
 
     public static void main(String[] args) {
-        String plaintext = "youneedtofindthekey";
-        String ciphertext = "ntneudihyyeodkoefte";
+        String plaintext = "I really want to go to work, but I am too sick to drive. Let me help you with your baggage. Please wait outside of the house.";
+        String ciphertext = "arPbo yoe L t fo ewhu w  yhI  etve th sb. ea yem  akgltgwd ota  okpiorsl anil  iaheecg  .gewrls, douutmtoett.sIituuotooriaoe ";
 
         int[] key = Cryptanalize(plaintext, ciphertext);
         for(int k : key) {
@@ -13,6 +13,7 @@ public class BreakColumnar {
         }
         System.out.println();
     }
+
 
     public static int[] Cryptanalize(String p, String c) {
         int[] keys;
@@ -66,11 +67,12 @@ public class BreakColumnar {
     private static int getKeyWidth(String p, String c) {
         char first = c.charAt(0);
         int width; 
-        for(int i = 0; i <= MAX_KEY_LENGTH; i++) {
+        int maxwidth = Math.min(MAX_KEY_LENGTH, p.length());
+        for(int i = 0; i < maxwidth; i++) {
             char test = p.charAt(i);
         //    System.out.println(String.format("Trying at %d", i));
             if(test == first) {
-                for(width = 1; width <= MAX_KEY_LENGTH; width++) {
+                for(width = 1; width < maxwidth; width++) {
         //            System.out.println(String.format("Trying width %d", width));
                     if(checkWidth(p, c, 0, i, width)) {
         //                System.out.println(String.format("Key width is %d", width));
