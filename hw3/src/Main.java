@@ -4,11 +4,11 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
         String message = args[0];
-        ArrayList<String> chunks = divideInto224BitChuncks(message);
+        ArrayList<String> chunks = divideInto224BitChunks(message);
         frankensteinTheMfs(chunks);
     }
 
-    private static ArrayList<String> divideInto224BitChuncks(String message) {
+    private static ArrayList<String> divideInto224BitChunks(String message) {
         ArrayList<String> chunks = new ArrayList<>();
         while (message.length() / 28 != 0) {
             chunks.add(message.substring(0, 28));
@@ -26,10 +26,9 @@ public class Main {
     }
 
     private static void frankensteinTheMfs(ArrayList<String> chunks) {
-        Main main = new Main();
         for(int i = 0; i < chunks.size(); i++) {
             ArrayList<String> sevenChunksOfFour = generateSevenChunksOfFour(chunks.get(i));
-            main.hash(sevenChunksOfFour);
+            hashKetchum(sevenChunksOfFour);
         }
     }
 
@@ -45,7 +44,7 @@ public class Main {
         return sevenChunks;
     }
 
-    void hash(ArrayList<String> sevenChunksOfFour) {
+    private static void hashKetchum(ArrayList<String> sevenChunksOfFour) {
 
     }
 
@@ -55,8 +54,8 @@ public class Main {
 //        // initially set the adjusted to be the original value of the sevenChunksOfFour arraylist
 //        ArrayList<String> adjusted = (ArrayList<String>) sevenChunksOfFour.clone();
 //        for(int i = 0; i < 12; i++) {
-//            // as we are messing with the adjusted list, make sure there is a copy of this original thin we're messign with
-//            ArrayList<String> prevAdjusted = (ArrayList<String>) adjusted.clone(); // prevAdjusted is from the adjusted from the last runthrough
+//            // as we are messing with the adjusted list, make sure there is a copy of this original thin we're messing with
+//            ArrayList<String> prevAdjusted = (ArrayList<String>) adjusted.clone(); // prevAdjusted is from the adjusted from the last run-through
 //            adjusted.set(0, prevAdjusted.get(6));                                   // spot [0] is set to 6
 //            adjusted.set(1, xor.encode(prevAdjusted.get(0), prevAdjusted.get(2)));  // [1] 1 comes from 0 ^ 2
 //            adjusted.set(2, xor.encode(prevAdjusted.get(1), prevAdjusted.get(6)));  // [2] comes from 1 ^ 6
