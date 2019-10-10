@@ -11,5 +11,5 @@
     * block 5 ^ block 7
     * block 6 is left alone
 4. blocks are then placed in the following order: 7, 1, 2, 3, 4, 5, 6
-5. repeat step 3-4 twelve times.
+5. repeat step 3-4 28 times.
 6. return the monstrosity
