@@ -1,22 +1,21 @@
-import java.lang.reflect.Array;
-import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 public class Main {
     public static void main(String[] args) {
-<<<<<<< HEAD
-        
-=======
-        String message = args[0];
-        ArrayList<String> chunks = divideInto224BitChuncks(message);
+        String message;
+        if(args.length < 1) {
+            message = "Something something woah ldkfja Soemthing";
+        } else message = args[0];
+        ArrayList<String> chunks = divideInto224BitChunks(message);
         frankensteinTheMfs(chunks);
-
-//        System.out.println("hello");
     }
 
-    private static ArrayList<String> divideInto224BitChuncks(String message) {
+    private static ArrayList<String> divideInto224BitChunks(String message) {
         ArrayList<String> chunks = new ArrayList<>();
         while (message.length() / 28 != 0) {
             chunks.add(message.substring(0, 28));
@@ -33,62 +32,104 @@ public class Main {
         }
     }
 
-    private static void frankensteinTheMfs(ArrayList<String> chunks) {
-        // adding to howManyMoreChunks will make sure that there are exactly 7 different blocks
-        int howManyMoreChunks = 0;
-        while((chunks.size() + howManyMoreChunks) % 7 != 0) {
-            howManyMoreChunks++;
+    private static String frankensteinTheMfs(ArrayList<String> chunks) {
+        int[] finalReturn = new int[7];
+        for(int i = 0; i < chunks.size(); i++) {
+            ArrayList<String> sevenChunksOfFour = generateSevenChunksOfFour(chunks.get(i));
+            int[] blocks = new int[sevenChunksOfFour.size()];
+            for(int j = 0; j < sevenChunksOfFour.size(); j++) {
+                String block = sevenChunksOfFour.get(j);
+                int iBlock = ByteBuffer.wrap(block.getBytes(StandardCharsets.UTF_8)).getInt();
+                blocks[j] = iBlock;
+            }
+            System.out.println(intArrayToBase64(blocks));
+            int[] hashedBlocks = hashKetchum(blocks);
+            System.out.println(intArrayToBase64(hashedBlocks));
+            finalReturn = addIntArrayMod(finalReturn, hashedBlocks);
         }
-
-        // add howManyMoreChunks 28-count of zeroes so it will be divisible by 7
-        for(int i = 0; i < howManyMoreChunks; i++) {
-            String zeroes = "0000000000000000000000000000";
-            chunks.add(zeroes);
-        }
-
-        ArrayList<String> adjustedChunks = adjustChunks(generateSevenChunks(chunks));
-
+        return intArrayToBase64(finalReturn);
     }
 
-    private static ArrayList<String> generateSevenChunks(ArrayList<String> chunks) {
-        ArrayList<String> sevenChunks = new ArrayList<>(Arrays.asList("", "", "", "", "", "", ""));
-        int numChunks = chunks.size() / 7;
-        for(int i = 0; i < numChunks; i++) {
-            int sevenVal = 7 * i;
-            sevenChunks.set(0, sevenChunks.get(0) + chunks.get(sevenVal));
-            sevenChunks.set(1, sevenChunks.get(1) + chunks.get(sevenVal + 1));
-            sevenChunks.set(2, sevenChunks.get(2) + chunks.get(sevenVal + 2));
-            sevenChunks.set(3, sevenChunks.get(3) + chunks.get(sevenVal + 3));
-            sevenChunks.set(4, sevenChunks.get(4) + chunks.get(sevenVal + 4));
-            sevenChunks.set(5, sevenChunks.get(5) + chunks.get(sevenVal + 5));
-            sevenChunks.set(6, sevenChunks.get(6) + chunks.get(sevenVal + 6));
-        }
+    private static String intArrayToBase64(int[] arr) {
+        ByteBuffer bb = ByteBuffer.allocate(arr.length * 4);
+        IntBuffer ib = bb.asIntBuffer();
+        ib.put(arr);
+        return Base64.getEncoder().encodeToString(bb.array());
+    }
+
+    private static ArrayList<String> generateSevenChunksOfFour(String chunk) {
+        ArrayList<String> sevenChunks = new ArrayList<>();
+        sevenChunks.add(chunk.substring(0,  4));
+        sevenChunks.add(chunk.substring(4,  8));
+        sevenChunks.add(chunk.substring(8,  12));
+        sevenChunks.add(chunk.substring(12, 16));
+        sevenChunks.add(chunk.substring(16, 20));
+        sevenChunks.add(chunk.substring(20, 24));
+        sevenChunks.add(chunk.substring(24));
         return sevenChunks;
->>>>>>> 7cd8e58b9cdfd59484f729c5e3de80633a87c263
     }
 
-    private static ArrayList<String> adjustChunks(ArrayList<String> sevenChunks) {
-        StringXORer xor = new StringXORer();
+    private static int[] hashKetchum(int[] blocks) {
+        int a = blocks[0];
+        int b = blocks[1];
+        int c = blocks[2]; 
+        int d = blocks[3];
+        int e = blocks[4];
+        int f = blocks[5];
+        int g = blocks[6];
+        for(int i = 0; i < 28; i++) {
+            int a1 = g;
+            int b1 = (int)((((long)(a ^ c)) + ((long)b)) % (long)Math.pow(2, 32));
+            int c1 = b ^ g;
+            int d1 = c ^ e;
+            int e1 = leftRotate(d, 2);
+            int f1 = d ^ g;
+            int g1 = f;
 
-        ArrayList<String> adjusted = (ArrayList<String>) sevenChunks.clone();
-
-        for(int i = 0; i < 12; i++) {
-            ArrayList<String> prevAdjusted = (ArrayList<String>) adjusted.clone(); // prevAdjusted is from the adjusted from the last runthrough
-            adjusted.set(0, prevAdjusted.get(6));                                   // spot [0] is set to 6
-            adjusted.set(1, xor.encode(prevAdjusted.get(0), prevAdjusted.get(2)));  // [1] 1 comes from 0 ^ 2
-            adjusted.set(2, xor.encode(prevAdjusted.get(1), prevAdjusted.get(6)));  // [2] comes from 1 ^ 6
-            adjusted.set(3, xor.encode(prevAdjusted.get(2), prevAdjusted.get(4)));  // [3] comes from 2 ^ 5
-            adjusted.set(4, prevAdjusted.get(3));                                   // [4] comes from 3 << 2
-            adjusted.set(5, xor.encode(prevAdjusted.get(4), prevAdjusted.get(6)));  // [5] comes from 4 ^ 6
-            adjusted.set(6, prevAdjusted.get(5));                                   // [6] comes from spot 5
+            a = a1;
+            b = b1;
+            c = c1;
+            d = d1;
+            e = e1;
+            f = f1;
+            g = g1;
         }
-
-        return adjusted;
+        return new int[]{a, b, c, d, e, f, g};
     }
 
-    static int RotateLeftTwice(int a) {
-        int b = a << 2;
-        int c =  (a & 0xC0000000) / (0xC0000000);
-        return b + c;
+
+    private static int leftRotate(int n, int d) {
+        return (n << d) | (n >> (32 - d));
     }
+
+    private static int[] addIntArrayMod(int[] a, int[] b) {
+        int[] output = new int[a.length];
+        for(int i = 0; i < a.length; i++) {
+            long c = a[i];
+            long d = b[i];
+            long e = (c + d) % (long)Math.pow(2, 32);
+            output[i] = (int)e;
+        }
+        return output;
+    }
+
+//    private static ArrayList<String> adjustChunks(ArrayList<String> sevenChunksOfFour) {
+//        StringXORer xor = new StringXORer();
+//
+//        // initially set the adjusted to be the original value of the sevenChunksOfFour arraylist
+//        ArrayList<String> adjusted = (ArrayList<String>) sevenChunksOfFour.clone();
+//        for(int i = 0; i < 12; i++) {
+//            // as we are messing with the adjusted list, make sure there is a copy of this original thin we're messing with
+//            ArrayList<String> prevAdjusted = (ArrayList<String>) adjusted.clone(); // prevAdjusted is from the adjusted from the last run-through
+//            adjusted.set(0, prevAdjusted.get(6));                                   // spot [0] is set to 6
+//            adjusted.set(1, xor.encode(prevAdjusted.get(0), prevAdjusted.get(2)));  // [1] 1 comes from 0 ^ 2
+//            adjusted.set(2, xor.encode(prevAdjusted.get(1), prevAdjusted.get(6)));  // [2] comes from 1 ^ 6
+//            adjusted.set(3, xor.encode(prevAdjusted.get(2), prevAdjusted.get(4)));  // [3] comes from 2 ^ 5
+//            adjusted.set(4, prevAdjusted.get(3));                                   // [4] comes from 3 << 2
+//            adjusted.set(5, xor.encode(prevAdjusted.get(4), prevAdjusted.get(6)));  // [5] comes from 4 ^ 6
+//            adjusted.set(6, prevAdjusted.get(5));                                   // [6] comes from spot 5
+//        }
+//
+//        return adjusted;
+//    }
 }
