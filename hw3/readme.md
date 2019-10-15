@@ -1,5 +1,8 @@
 # Hash Ketchum (copyrighted):
 
+## Circuit Diagram
+Found in the **hw3/circuit_diagram.jpg** file
+
 ## Method:
 1. Split into 224 bit blocks. Pad if necessary
 2. divide those 224 blocks into seven 32-bit blocks
