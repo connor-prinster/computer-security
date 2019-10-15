@@ -1,6 +1,5 @@
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -9,10 +8,10 @@ public class Main {
     public static void main(String[] args) {
         String message;
         if(args.length < 1) {
-            message = "aaaaaaaaaaaaaaaab";
+            message = "aaaaaaaaaaaaaaaaa";
         } else message = args[0];
-        ArrayList<String> chunks = divideInto224BitChunks(message);
-        frankensteinTheMfs(chunks);
+
+        System.out.println(performHash(message));
     }
 
     private static final int RepetitionCount = 64;
@@ -34,19 +33,18 @@ public class Main {
         }
     }
 
-    private static String frankensteinTheMfs(ArrayList<String> chunks) {
+    private static String performHash(String message) {
+        ArrayList<String> chunks = divideInto224BitChunks(message);
         int[] finalReturn = new int[7];
         for(int i = 0; i < chunks.size(); i++) {
-            ArrayList<String> sevenChunksOfFour = generateSevenChunksOfFour(chunks.get(i));
-            int[] blocks = new int[sevenChunksOfFour.size()];
-            for(int j = 0; j < sevenChunksOfFour.size(); j++) {
-                String block = sevenChunksOfFour.get(j);
+            ArrayList<String> sevenChunks = generateSevenChunksOfFour(chunks.get(i));
+            int[] blocks = new int[sevenChunks.size()];
+            for(int j = 0; j < sevenChunks.size(); j++) {
+                String block = sevenChunks.get(j);
                 int iBlock = ByteBuffer.wrap(block.getBytes(StandardCharsets.UTF_8)).getInt();
                 blocks[j] = iBlock;
             }
-            System.out.println(intArrayToBase64(blocks));
             int[] hashedBlocks = hashKetchum(blocks);
-            System.out.println(intArrayToBase64(hashedBlocks));
             finalReturn = addIntArrayMod(finalReturn, hashedBlocks);
         }
         return intArrayToBase64(finalReturn);
