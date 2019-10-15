@@ -1,6 +1,5 @@
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -9,13 +8,11 @@ public class Main {
     public static void main(String[] args) {
         String message;
         if(args.length < 1) {
-            message = "aaaaaaaaaaaaaaaab";
+            message = "Something something woah ldkfja Soemthing";
         } else message = args[0];
         ArrayList<String> chunks = divideInto224BitChunks(message);
         frankensteinTheMfs(chunks);
     }
-
-    private static final int RepetitionCount = 64;
 
     private static ArrayList<String> divideInto224BitChunks(String message) {
         ArrayList<String> chunks = new ArrayList<>();
@@ -71,14 +68,6 @@ public class Main {
         return sevenChunks;
     }
 
-    private static final int[] piInQuats = new int[]
-        {   0x3243F6A8, 0x885A308D,
-            0x313198A2, 0xE0370734,
-            0x4A409382, 0x2299F31D,
-            0x0082EFA9, 0x8EC4E6C8,
-            0x9452821E, 0x638D0137,
-            0x7BE5466C, 0xF34E90C6};
-
     private static int[] hashKetchum(int[] blocks) {
         int a = blocks[0];
         int b = blocks[1];
@@ -87,13 +76,13 @@ public class Main {
         int e = blocks[4];
         int f = blocks[5];
         int g = blocks[6];
-        for(int i = 0; i < RepetitionCount; i++) {
+        for(int i = 0; i < 28; i++) {
             int a1 = g;
-            int b1 = addMod32(a, piInQuats[i % piInQuats.length]);
-            int c1 = addMod32(b, b ^ c ^ d);
-            int d1 = c;
-            int e1 = addMod32(d, (c | e) ^ a);
-            int f1 = addMod32(leftRotate(e, 2), g) ^ blocks[((i + 3) * 10) % 7];
+            int b1 = (int)((((long)(a ^ c)) + ((long)b)) % (long)Math.pow(2, 32));
+            int c1 = b ^ g;
+            int d1 = c ^ e;
+            int e1 = leftRotate(d, 2);
+            int f1 = d ^ g;
             int g1 = f;
 
             a = a1;
@@ -107,12 +96,6 @@ public class Main {
         return new int[]{a, b, c, d, e, f, g};
     }
 
-    private static int addMod32(int a, int b) {
-        long al = (long)a;
-        long bl = (long)b;
-        long c = al + bl;
-        return (int)Long.remainderUnsigned(c, (long)0xFFFFFFFF);
-    }
 
     private static int leftRotate(int n, int d) {
         return (n << d) | (n >> (32 - d));
@@ -128,24 +111,4 @@ public class Main {
         }
         return output;
     }
-
-//    private static ArrayList<String> adjustChunks(ArrayList<String> sevenChunksOfFour) {
-//        StringXORer xor = new StringXORer();
-//
-//        // initially set the adjusted to be the original value of the sevenChunksOfFour arraylist
-//        ArrayList<String> adjusted = (ArrayList<String>) sevenChunksOfFour.clone();
-//        for(int i = 0; i < 12; i++) {
-//            // as we are messing with the adjusted list, make sure there is a copy of this original thin we're messing with
-//            ArrayList<String> prevAdjusted = (ArrayList<String>) adjusted.clone(); // prevAdjusted is from the adjusted from the last run-through
-//            adjusted.set(0, prevAdjusted.get(6));                                   // spot [0] is set to 6
-//            adjusted.set(1, xor.encode(prevAdjusted.get(0), prevAdjusted.get(2)));  // [1] 1 comes from 0 ^ 2
-//            adjusted.set(2, xor.encode(prevAdjusted.get(1), prevAdjusted.get(6)));  // [2] comes from 1 ^ 6
-//            adjusted.set(3, xor.encode(prevAdjusted.get(2), prevAdjusted.get(4)));  // [3] comes from 2 ^ 5
-//            adjusted.set(4, prevAdjusted.get(3));                                   // [4] comes from 3 << 2
-//            adjusted.set(5, xor.encode(prevAdjusted.get(4), prevAdjusted.get(6)));  // [5] comes from 4 ^ 6
-//            adjusted.set(6, prevAdjusted.get(5));                                   // [6] comes from spot 5
-//        }
-//
-//        return adjusted;
-//    }
 }
