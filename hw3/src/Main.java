@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         String message;
         if(args.length < 1) {
-            message = "Something something woah ldkfja Soemthing";
+            message = "Something";
         } else message = args[0];
         ArrayList<String> chunks = divideInto224BitChunks(message);
         frankensteinTheMfs(chunks);
