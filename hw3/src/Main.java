@@ -25,9 +25,13 @@ public class Main {
         if (message.length() % 28 == 0) {
             return chunks;
         } else {
-            while (message.length() < 28) {
-                message += "0";
+            // for a message of 28 chars, we pad it with as many zeros until the
+            // final character (making it 28) being a 1
+//            String zero = "0";
+            while (message.length() < 27) {
+                message += "\0";
             }
+            message += 1;
             chunks.add(message);
             return chunks;
         }
