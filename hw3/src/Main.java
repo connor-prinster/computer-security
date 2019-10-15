@@ -8,13 +8,11 @@ public class Main {
     public static void main(String[] args) {
         String message;
         if(args.length < 1) {
-            message = "aaaaaaaaaaaaaaaab";
+            message = "Something";
         } else message = args[0];
         ArrayList<String> chunks = divideInto224BitChunks(message);
         frankensteinTheMfs(chunks);
     }
-
-    private static final int RepetitionCount = 64;
 
     private static ArrayList<String> divideInto224BitChunks(String message) {
         ArrayList<String> chunks = new ArrayList<>();
@@ -70,14 +68,6 @@ public class Main {
         return sevenChunks;
     }
 
-    private static final int[] piInQuats = new int[]
-        {   0x3243F6A8, 0x885A308D,
-            0x313198A2, 0xE0370734,
-            0x4A409382, 0x2299F31D,
-            0x0082EFA9, 0x8EC4E6C8,
-            0x9452821E, 0x638D0137,
-            0x7BE5466C, 0xF34E90C6};
-
     private static int[] hashKetchum(int[] blocks) {
         int a = blocks[0];
         int b = blocks[1];
@@ -86,13 +76,13 @@ public class Main {
         int e = blocks[4];
         int f = blocks[5];
         int g = blocks[6];
-        for(int i = 0; i < RepetitionCount; i++) {
+        for(int i = 0; i < 28; i++) {
             int a1 = g;
-            int b1 = addMod32(a, piInQuats[i % piInQuats.length]);
-            int c1 = addMod32(b, b ^ c ^ d);
-            int d1 = c;
-            int e1 = addMod32(d, (c | e) ^ a);
-            int f1 = addMod32(leftRotate(e, 2), g) ^ blocks[((i + 3) * 10) % 7];
+            int b1 = (int)((((long)(a ^ c)) + ((long)b)) % (long)Math.pow(2, 32));
+            int c1 = b ^ g;
+            int d1 = c ^ e;
+            int e1 = leftRotate(d, 2);
+            int f1 = d ^ g;
             int g1 = f;
 
             a = a1;
@@ -106,12 +96,6 @@ public class Main {
         return new int[]{a, b, c, d, e, f, g};
     }
 
-    private static int addMod32(int a, int b) {
-        long al = (long)a;
-        long bl = (long)b;
-        long c = al + bl;
-        return (int)Long.remainderUnsigned(c, (long)0xFFFFFFFF);
-    }
 
     private static int leftRotate(int n, int d) {
         return (n << d) | (n >> (32 - d));
@@ -127,5 +111,4 @@ public class Main {
         }
         return output;
     }
-
 }
