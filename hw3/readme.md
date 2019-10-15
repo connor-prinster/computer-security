@@ -11,8 +11,9 @@
     * block 5 ^ block 7
     * block 6 is left alone
 4. blocks are then placed in the following order: 7, 1, 2, 3, 4, 5, 6
-5. repeat step 3-4 28 times.
-6. return the monstrosity
+5. repeat step 3-4 64 times.
+6. combine the blocks by adding them and performing a mod to get it back down to size
+7. return the monstrosity
 
 ## Explanaition:
 Cryptographic hash functions are computationally efficient, deterministic, pre-image resistant,
@@ -28,6 +29,8 @@ Second, Hash Ketchum is deterministic. The algorithm for Hash Ketchum produces t
 for a given input every time. The only input given to Hash Ketchum is the provided string,
 and since the steps are always the same, the output is output is always determined bu the input.
 
-Third, Hash Ketchum is pre-image resistant.
+Third, Hash Ketchum is pre-image resistant. The returned hash is always the same length, so the length
+of the input does not affect the hashed output. Changing one letter of the input creates an entirely
+different output. For example, the string "" produces the hash "" and the nearly identical string "" produces the hash ""
 
 Last, Hash Ketchum is collision resistant.
