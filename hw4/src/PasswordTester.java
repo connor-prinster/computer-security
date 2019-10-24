@@ -28,7 +28,7 @@ public class PasswordTester {
             commonWords = Files.readAllLines(pf);
 
             Path cf = new File("SpecialCharacterList.txt").toPath();
-            specialCharacters = Files.readString(cf).toCharArray();
+            specialCharacters = Files.readAllLines(cf).get(0).toCharArray();
 
             Path rf = new File("Possible Character Replacements.txt").toPath();
             replacementChars = new ArrayList<>();
@@ -65,8 +65,8 @@ public class PasswordTester {
         List<String> list = new ArrayList<>();
         for (String string : inputs) {
             list.add(string);
-            list.add(string.repeat(2));
-            list.add(string.repeat(3));
+            list.add(string + string);
+            list.add(string + string + string);
         }
         return list;
     }

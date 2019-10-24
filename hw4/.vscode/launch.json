@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - PasswordTester",
+            "request": "launch",
+            "mainClass": "PasswordTester",
+            "projectName": "hw4_c576b3e5"
+        }
+    ]
+}
