@@ -1,5 +1,7 @@
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,6 +38,12 @@ public class CreateAccount extends Application {
     private TextField stateInput = new TextField();
     private TextField zipcodeInput = new TextField();
     private TextField emailInput = new TextField();
+
+    private Label password = new Label("Password:");
+    private Label retypePassword = new Label("Re-Type Password:");
+    private TextField passwordInput = new TextField();
+    private TextField retypePasswordInput = new TextField();
+    private Label passwordError = new Label("");
 //    private int rpn;
 //    private int m;
 
@@ -44,13 +52,14 @@ public class CreateAccount extends Application {
     public void start(Stage primaryStage) throws Exception {
         BorderPane pane = new BorderPane();
         primaryStage.setTitle("Create Account");
-        Scene scene = new Scene(pane, 350, 400);
-        primaryStage.setScene(scene);
+        Group root = new Group();
+        root.getChildren().add(pane);
+        primaryStage.setScene(new Scene(root, 350, 400));
 
 
         Button submitInfo = new Button("Submit");
         submitInfo.setOnAction(e -> {
-            createInfoListThenPassword(scene);
+            createInfoListThenPassword(root);
 //            readPublicKeys();
         });
 
@@ -74,13 +83,51 @@ public class CreateAccount extends Application {
         pane.setCenter(hBox);
         pane.setAlignment(hBox, Pos.CENTER);
         pane.setBottom(submitInfo);
-        pane.setAlignment(submitInfo, Pos.TOP_CENTER);
+        pane.setAlignment(submitInfo, Pos.CENTER);
 
         primaryStage.show();
     }
 
-    private void createInfoListThenPassword(Scene scene) {
-//        scene.getChi
+    private void createInfoListThenPassword(Group root) {
+        root.getChildren().clear();
+
+        VBox vBox1 = new VBox();
+        vBox1.getChildren().addAll(password,retypePassword);
+        vBox1.setAlignment(Pos.TOP_RIGHT);
+        vBox1.setSpacing(19);
+        vBox1.setPadding(new Insets(150,0,0,50));
+
+        VBox vBox2 = new VBox();
+        vBox2.getChildren().addAll(passwordInput,retypePasswordInput);
+        vBox2.setSpacing(10);
+        vBox2.setPadding(new Insets(150,50,0,0));
+
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(vBox1,vBox2);
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(10);
+
+        Button submit = new Button("Submit");
+        submit.setOnAction(e -> {
+            submit();
+        });
+
+        VBox vbox3 = new VBox();
+        vbox3.getChildren().addAll(passwordError,submit);
+        vbox3.setSpacing(10);
+        vbox3.setAlignment(Pos.CENTER);
+
+        BorderPane pane = new BorderPane();
+        pane.setCenter(hBox);
+        pane.setAlignment(hBox, Pos.CENTER);
+        pane.setBottom(vbox3);
+        pane.setAlignment(vbox3, Pos.CENTER);
+
+        root.getChildren().add(pane);
+    }
+
+    private void submit() {
+
     }
 
 //    private void readPublicKeys() {
