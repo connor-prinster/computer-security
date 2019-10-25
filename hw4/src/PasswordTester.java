@@ -5,22 +5,14 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PasswordTester {
 
     private List<String> commonWords;
     private char[] specialCharacters;
-    private List<CharacterPair> replacementChars;
-
-    private class CharacterPair {
-        public char Key;
-        public char Value;
-
-        public CharacterPair(char key, char value) {
-            this.Key = key;
-            this.Value = value;
-        }
-    }
+    private Map<Character, List<Character>> replacementChars;
 
     public PasswordTester() {
         try {
@@ -31,9 +23,18 @@ public class PasswordTester {
             specialCharacters = Files.readAllLines(cf).get(0).toCharArray();
 
             Path rf = new File("Possible Character Replacements.txt").toPath();
-            replacementChars = new ArrayList<>();
+            replacementChars = new HashMap<>();
             for (String s : Files.readAllLines(rf)) {
-                replacementChars.add(new CharacterPair(s.charAt(0), s.charAt(3)));
+                char key = s.charAt(0);
+                char value = s.charAt(3);
+                List<Character> keylist;
+                if(replacementChars.containsKey(key)) {
+                    keylist = replacementChars.get(key);
+                } else {
+                    keylist = new ArrayList<Character>();
+                }
+                keylist.add(value);
+                replacementChars.put(key, keylist);
             }
 
         } catch(IOException e) {
@@ -48,6 +49,9 @@ public class PasswordTester {
         variationList = reverseWords(variationList);
         variationList = repeatWords(variationList);
         variationList = capitalizeWords(variationList);
+        //variationList = addNumbers(variationList);
+        //variationList = addSpecialCharacters(variationList);
+        //variationList = addReplacements(variationList);
 
         return variationList;
     }
@@ -104,16 +108,40 @@ public class PasswordTester {
 
     private List<String> addReplacements(List<String> inputs) {
         List<String> list = new ArrayList<>();
+        for (String string : inputs) {
+            List<String> words = new ArrayList<>();
+            words.add(string);
 
+            for(int i = 0; i < string.length(); i++) {
+                char c = string.charAt(i);
+
+                if(replacementChars.containsKey(c)) {
+                    List<Character> clist = replacementChars.get(c);
+                    List<String> moreWords = new ArrayList<>();
+                    for(char d : clist) {
+                        for(String w : words) {
+                            moreWords.add(changeCharAt(w, d, i));
+                        }
+                    }
+                    words.addAll(moreWords);
+                }
+            }
+            list.addAll(words);
+        }
         return list;
+    }
+
+    private String changeCharAt(String s, char a, int i) {
+        StringBuilder b = new StringBuilder();
+        b.append(s);
+        b.setCharAt(i, a);
+        return b.toString();
     }
 
 
     public static void main(String[] args) {
         PasswordTester pt = new PasswordTester();
-        List<String> a = pt.GenerateWordVariations("something");
-        for (String string : a) {
-            System.out.println(string);
-        }
+        List<String> a = pt.GenerateWordVariations("password");
+        System.out.println(String.format("The string %s has a total number of %d permutations", "password", a.size()));
     }
 }
