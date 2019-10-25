@@ -49,9 +49,9 @@ public class PasswordTester {
         variationList = reverseWords(variationList);
         variationList = repeatWords(variationList);
         variationList = capitalizeWords(variationList);
-        variationList = addNumbers(variationList);
-        variationList = addSpecialCharacters(variationList);
-        variationList = addReplacements(variationList);
+        //variationList = addNumbers(variationList);
+        //variationList = addSpecialCharacters(variationList);
+        //variationList = addReplacements(variationList);
 
         return variationList;
     }
@@ -141,7 +141,7 @@ public class PasswordTester {
 
     public static void main(String[] args) {
         PasswordTester pt = new PasswordTester();
-        List<String> a = pt.GenerateWordVariations("some");
-        System.out.println(String.format("The string %s has a total number of %d permutations", "some", a.size()));
+        List<String> a = pt.GenerateWordVariations("password");
+        System.out.println(String.format("The string %s has a total number of %d permutations", "password", a.size()));
     }
 }
