@@ -1,4 +1,5 @@
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -8,21 +9,31 @@ public class Salt {
 
     Boolean generateSaltPasswords(String username, String password) {
         Salt s = new Salt();
-        String salt = s.produceSalt(password);
+
+        String salt = s.produceSalt(produceLong());
         String hashPass = s.produceHashPass(password, salt);
 
         return (s.saveVals(username, hashPass, salt));
     }
 
-    public String produceSalt(String password) {
+    private static String produceLong() {
+        int max = (int)(Math.random() * 1000);
+        long longer = 0;
+        for(int i = 0; i < max; i++) {
+            longer += (long)(Math.random() * 1000);
+        }
+        return Long.toString(longer);
+    }
+
+    private String produceSalt(String password) {
         return hk.performHash(password);
     }
 
-    public String produceHashPass(String password, String salt) {
+    private String produceHashPass(String password, String salt) {
         return hk.performHash(password + salt);
     }
 
-    public Boolean saveVals(String username, String password, String salt) {
+    private Boolean saveVals(String username, String password, String salt) {
         String saltFile = "salts.txt";
         String passFile = "passwords.txt";
         try {
@@ -44,5 +55,22 @@ public class Salt {
             return false;
         }
         return true;
+    }
+
+    public void wipeFiles() {
+        String saltFile = "salts.txt";
+        String passFile = "passwords.txt";
+
+        File salt = new File(saltFile);
+        File pass = new File(passFile);
+
+        if(salt.delete() && pass.delete()) {
+            System.out.println("Files deleted successfully");
+        }
+        else {
+            System.out.println("Something went wrong, check the files: "
+                    + saltFile + " and " + passFile);
+        }
+
     }
 }
