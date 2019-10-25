@@ -8,7 +8,7 @@ public class HashKetchum {
 
     private static final int RepetitionCount = 64;
 
-    private static String performHash(String message) {
+    public static String performHash(String message) {
         ArrayList<String> chunks = divideInto224BitChunks(message);
         int[] finalReturn = new int[7];
         for(int i = 0; i < chunks.size(); i++) {
