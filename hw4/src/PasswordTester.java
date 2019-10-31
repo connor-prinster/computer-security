@@ -1,4 +1,5 @@
 import java.nio.file.Files;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -40,6 +41,16 @@ public class PasswordTester {
         } catch(IOException e) {
             System.err.println("Password tester could not find password list");
         }
+    }
+    
+    public static void DumpStringListToFile(List<String> list, String file) throws IOException {
+        BufferedWriter out = Files.newBufferedWriter(new File(file).toPath());
+        for (String string : list) {
+            out.write(string);
+            out.newLine();
+        }
+        out.flush();
+        out.close();
     }
 
     public List<String> GenerateWordVariations(String input) {
@@ -178,10 +189,20 @@ public class PasswordTester {
         return variationList;
     }
 
+    public List<String> CreatePersonalPasswords(Map<String, String> info) {
+        List<String> list = new ArrayList<>();
+
+        return list;
+    }
 
     public static void main(String[] args) {
         PasswordTester pt = new PasswordTester();
         List<String> a = pt.CreateCommonVariationList();
         System.out.println(String.format("Total number of %d permutations", a.size()));
+        // try {
+        //     DumpStringListToFile(a, "temporary_FILE");
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
     }
 }

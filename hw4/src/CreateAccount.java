@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class CreateAccount extends Application {
@@ -44,9 +46,6 @@ public class CreateAccount extends Application {
     private TextField passwordInput = new TextField();
     private TextField retypePasswordInput = new TextField();
     private Label passwordError = new Label("");
-//    private int rpn;
-//    private int m;
-
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -60,13 +59,7 @@ public class CreateAccount extends Application {
         Button submitInfo = new Button("Submit");
         submitInfo.setOnAction(e -> {
             createInfoListThenPassword(root);
-//            readPublicKeys();
         });
-
-//        Button encrypt = new Button("Encrypt");
-//        encrypt.setOnAction(e -> {
-//            encryptStuff();
-//        });
 
         VBox vbox1 = new VBox();
         vbox1.getChildren().addAll(firstName,lastName,dob,phoneNumber,street,aptNo,city,state,zipcode,email);
@@ -89,6 +82,24 @@ public class CreateAccount extends Application {
     }
 
     private void createInfoListThenPassword(Group root) {
+
+        ArrayList<String> personalInfo = new ArrayList();
+        personalInfo.add(firstNameInput.getText());
+        personalInfo.add(lastNameInput.getText());
+        String fullDob = dobInput.getText();
+        personalInfo.add(fullDob);
+        personalInfo.addAll(Arrays.asList(fullDob.split("/")));
+        String fullPhone = phoneNumberInput.getText();
+        personalInfo.add(fullPhone);
+        personalInfo.addAll(Arrays.asList(fullPhone.split("-")));
+        personalInfo.add(streetInput.getText());
+        personalInfo.add(aptNoInput.getText());
+        personalInfo.add(cityInput.getText());
+        personalInfo.add(stateInput.getText());
+        personalInfo.add(zipcodeInput.getText());
+        personalInfo.add(emailInput.getText());
+
+
         root.getChildren().clear();
 
         VBox vBox1 = new VBox();
