@@ -46,12 +46,26 @@ public class PasswordTester {
         List<String> variationList = new ArrayList<>();
         variationList.add(input);
 
+        //System.out.println("Reversing word");
         variationList = reverseWords(variationList);
+
+        //System.out.println("Repeating words");
         variationList = repeatWords(variationList);
+
+        //System.out.println("Captializing words");
         variationList = capitalizeWords(variationList);
-        //variationList = addNumbers(variationList);
-        //variationList = addSpecialCharacters(variationList);
+
+        //System.out.println("Adding numbers");
+        variationList = addNumbers(variationList);
+
+        //System.out.println("Adding special characters");
+        variationList = addSpecialCharacters(variationList);
+
+        //System.out.println("Adding every possible replacement");
         //variationList = addReplacements(variationList);
+        
+        //System.out.println("Adding single character replacements");
+        variationList = addSingleReplacements(variationList);
 
         return variationList;
     }
@@ -131,6 +145,24 @@ public class PasswordTester {
         return list;
     }
 
+    private List<String> addSingleReplacements(List<String> inputs) {
+        List<String> list = new ArrayList<>();
+        for (String string : inputs) {
+            list.add(string);
+
+            for(int i = 0; i < string.length(); i++) {
+                char c = string.charAt(i);
+                if(replacementChars.containsKey(c)) {
+                    List<Character> clist = replacementChars.get(c);
+                    for(char d : clist) {
+                        list.add(changeCharAt(string, d, i));
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
     private String changeCharAt(String s, char a, int i) {
         StringBuilder b = new StringBuilder();
         b.append(s);
@@ -138,10 +170,18 @@ public class PasswordTester {
         return b.toString();
     }
 
+    public List<String> CreateCommonVariationList() {
+        List<String> variationList = new ArrayList<>();
+        for (String string : commonWords) {
+            variationList.addAll(GenerateWordVariations(string));
+        }
+        return variationList;
+    }
+
 
     public static void main(String[] args) {
         PasswordTester pt = new PasswordTester();
-        List<String> a = pt.GenerateWordVariations("password");
-        System.out.println(String.format("The string %s has a total number of %d permutations", "password", a.size()));
+        List<String> a = pt.CreateCommonVariationList();
+        System.out.println(String.format("Total number of %d permutations", a.size()));
     }
 }
