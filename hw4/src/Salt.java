@@ -1,11 +1,12 @@
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Salt {
 
     HashKetchum hk = new HashKetchum();
+    String saltFile = "salts.txt";
+    String passFile = "passwords.txt";
 
     Boolean generateSaltPasswords(String username, String password) {
         Salt s = new Salt();
@@ -34,8 +35,6 @@ public class Salt {
     }
 
     private Boolean saveVals(String username, String password, String salt) {
-        String saltFile = "salts.txt";
-        String passFile = "passwords.txt";
         try {
             // ----- Saves the username and salt value to a file ----- //
             // the FileWriter requires the 'true' to append to the existing file
@@ -72,5 +71,63 @@ public class Salt {
                     + saltFile + " and " + passFile);
         }
 
+    }
+
+    public Map<String, Map<String, String>> getUserPassSalt() {
+        Map<String, Map<String, String>> userPassSalt = new HashMap<>();
+
+        Map<String, String> salts = getSalts();
+        Map<String, String> hashPass = getPassHash();
+
+        for(Map.Entry<String, String> saltEntry : salts.entrySet()) {
+            Map<String, String> userVals = new HashMap<>();
+
+            String user = saltEntry.getKey();
+            String saltVal = saltEntry.getValue();
+            String passVal = hashPass.get(user);
+
+            userVals.put("salt", saltVal);
+            userVals.put("password", passVal);
+
+            userPassSalt.put(user, userVals);
+        }
+
+        return userPassSalt;
+    }
+
+    private Map<String, String> getSalts() {
+        BufferedReader inSalt;
+        Map<String, String> userSalt = new HashMap<>();
+        try{
+            inSalt = new BufferedReader(new FileReader(saltFile));
+            String in;
+            while((in = inSalt.readLine()) != null) {
+                String[] res = in.split(" ");
+                userSalt.put(res[0], res[1]);
+            }
+        }
+        catch (IOException e){
+            System.out.println(e);
+        }
+
+        return userSalt;
+    }
+
+    private Map<String, String> getPassHash() {
+        BufferedReader inSalt;
+        Map<String, String> userPassHash = new HashMap<>();
+        try{
+            inSalt = new BufferedReader(new FileReader(passFile));
+            String in = "";
+            while((in = inSalt.readLine()) != null) {
+                String[] res = in.split(" ");
+                userPassHash.put(res[0], res[1]);
+            }
+        }
+        catch (IOException e){
+            System.out.println(e);
+        }
+
+        return userPassHash;
     }
 }
