@@ -171,6 +171,10 @@ public class CreateAccount extends Application {
             }
             iters++;
         }
+        if (!isInList) {
+            Salt salt = new Salt();
+            salt.generateSaltPasswords(emailInput.getText(), password);
+        }
     }
 
 //    private void readPublicKeys() {
