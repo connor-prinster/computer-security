@@ -197,15 +197,16 @@ public class PasswordTester {
         return list;
     }
 
-    public List<String> CreatePersonalPasswords(Map<String, String> info) {
-        List<String> list = new ArrayList<>();
+    public Map<String, List<String>> CreatePersonalPasswords(Map<String, String> info) {
+        Map<String, List<String>> list = new HashMap<>();
 
         return list;
     }
 
-    public List<String> CreateFullInfoPasswordList(Map<String, String> info) {
-        List<String> list = new ArrayList<>();
-
+    public Map<String, List<String>> CreateFullInfoPasswordList(Map<String, String> info) {
+        Map<String, List<String>> list = new HashMap<>();
+        list.putAll(CreateCommonVariationList());
+        list.putAll(CreatePersonalPasswords(info));
         return list;
     }
 
