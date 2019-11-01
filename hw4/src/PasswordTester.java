@@ -197,19 +197,22 @@ public class PasswordTester {
         return list;
     }
 
-    public List<String> CreatePersonalPasswords(Map<String, String> info) {
-        List<String> list = new ArrayList<>();
+    public Map<String, List<String>> CreatePersonalPasswords(Map<String, String> info) {
+        Map<String, List<String>> list = new HashMap<>();
 
         return list;
     }
 
-    public List<String> CreateFullInfoPasswordList(Map<String, String> info) {
-        
+    public Map<String, List<String>> CreateFullInfoPasswordList(Map<String, String> info) {
+        Map<String, List<String>> list = new HashMap<>();
+        list.putAll(CreateCommonVariationList());
+        list.putAll(CreatePersonalPasswords(info));
+        return list;
     }
 
     public static void main(String[] args) {
         PasswordTester pt = new PasswordTester();
-        List<String> a = pt.CreateCommonVariationList();
+        List<String> a = FlattenMap(pt.CreateCommonVariationList());
         System.out.println(String.format("Total number of %d permutations", a.size()));
         try {
             DumpStringListToFile(a, "temporary_FILE");
