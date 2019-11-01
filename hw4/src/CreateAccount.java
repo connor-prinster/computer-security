@@ -11,8 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 
 public class CreateAccount extends Application {
@@ -44,7 +43,7 @@ public class CreateAccount extends Application {
     private TextField retypePasswordInput = new TextField();
     private Label passwordError = new Label("");
 
-    private HashMap<String, ArrayList<String>> possiblePasswords;
+    private Map<String, List<String>> possiblePasswords;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -82,10 +81,10 @@ public class CreateAccount extends Application {
 
     private void createInfoListThenPassword(Group root) {
 
-        possiblePasswords = createMapForPersonInfo();
+
 
         PasswordTester passwordTester = new PasswordTester();
-        passwordTester.CreatePersonalPasswords(personalInfo);
+        possiblePasswords = passwordTester.CreateFullInfoPasswordList(createMapForPersonInfo());
 
         root.getChildren().clear();
 
@@ -155,7 +154,23 @@ public class CreateAccount extends Application {
     }
 
     private void submit() {
-
+        String password = passwordInput.getText();
+        Set<String> keys = possiblePasswords.keySet();
+        boolean isInList = false;
+        int iters = 0;
+        for (String key : keys) {
+            List<String> passwords = possiblePasswords.get(key);
+            for (int i = 0; i < passwords.size(); i++) {
+                if (password.equals(passwords.get(i))) {
+                    if (iters < 30) passwordError.setText("You picked a password prone to dictionary attack with a variation of the word " + key);
+                    else passwordError.setText("You picked a password prone to targeting attack with your info in the field " + key);
+                    isInList = true;
+                    break;
+                }
+                if (isInList) break;
+            }
+            iters++;
+        }
     }
 
 //    private void readPublicKeys() {
