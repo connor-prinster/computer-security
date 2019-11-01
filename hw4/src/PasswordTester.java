@@ -204,12 +204,14 @@ public class PasswordTester {
     }
 
     public List<String> CreateFullInfoPasswordList(Map<String, String> info) {
-        
+        List<String> list = new ArrayList<>();
+
+        return list;
     }
 
     public static void main(String[] args) {
         PasswordTester pt = new PasswordTester();
-        List<String> a = pt.CreateCommonVariationList();
+        List<String> a = FlattenMap(pt.CreateCommonVariationList());
         System.out.println(String.format("Total number of %d permutations", a.size()));
         try {
             DumpStringListToFile(a, "temporary_FILE");
