@@ -181,12 +181,20 @@ public class PasswordTester {
         return b.toString();
     }
 
-    public List<String> CreateCommonVariationList() {
-        List<String> variationList = new ArrayList<>();
+    public Map<String, List<String>> CreateCommonVariationList() {
+        Map<String, List<String>> wordToVariations = new HashMap<>();
         for (String string : commonWords) {
-            variationList.addAll(GenerateWordVariations(string));
+            wordToVariations.put(string, GenerateWordVariations(string));
         }
-        return variationList;
+        return wordToVariations;
+    }
+
+    public static List<String> FlattenMap(Map<String, List<String>> map) {
+        List<String> list = new ArrayList<>();
+        for (List<String> aList : map.values()) {
+            list.addAll(aList);
+        }
+        return list;
     }
 
     public List<String> CreatePersonalPasswords(Map<String, String> info) {
@@ -195,14 +203,18 @@ public class PasswordTester {
         return list;
     }
 
+    public List<String> CreateFullInfoPasswordList(Map<String, String> info) {
+        
+    }
+
     public static void main(String[] args) {
         PasswordTester pt = new PasswordTester();
         List<String> a = pt.CreateCommonVariationList();
         System.out.println(String.format("Total number of %d permutations", a.size()));
-        // try {
-        //     DumpStringListToFile(a, "temporary_FILE");
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
+        try {
+            DumpStringListToFile(a, "temporary_FILE");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

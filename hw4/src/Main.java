@@ -1,11 +1,10 @@
-import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
 
     public static void main(String[] args) {
         Salt salt = new Salt();
-        salt.wipeFiles();
+//        salt.wipeFiles();
         salt.generateSaltPasswords("username", "password");
         salt.generateSaltPasswords("pikachu", "ash");
         salt.generateSaltPasswords("starmie", "misty");
