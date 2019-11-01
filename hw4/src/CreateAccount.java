@@ -16,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class CreateAccount extends Application {
@@ -83,21 +84,8 @@ public class CreateAccount extends Application {
 
     private void createInfoListThenPassword(Group root) {
 
-        ArrayList<String> personalInfo = new ArrayList();
-        personalInfo.add(firstNameInput.getText());
-        personalInfo.add(lastNameInput.getText());
-        String fullDob = dobInput.getText();
-        personalInfo.add(fullDob);
-        personalInfo.addAll(Arrays.asList(fullDob.split("/")));
-        String fullPhone = phoneNumberInput.getText();
-        personalInfo.add(fullPhone);
-        personalInfo.addAll(Arrays.asList(fullPhone.split("-")));
-        personalInfo.add(streetInput.getText());
-        personalInfo.add(aptNoInput.getText());
-        personalInfo.add(cityInput.getText());
-        personalInfo.add(stateInput.getText());
-        personalInfo.add(zipcodeInput.getText());
-        personalInfo.add(emailInput.getText());
+        HashMap<String, String> personalInfo = createMapForPersonInfo();
+
 
 
         root.getChildren().clear();
@@ -135,6 +123,36 @@ public class CreateAccount extends Application {
         pane.setAlignment(vbox3, Pos.CENTER);
 
         root.getChildren().add(pane);
+    }
+
+    private HashMap<String, String> createMapForPersonInfo() {
+        HashMap<String, String> personalInfo = new HashMap<>();
+        personalInfo.put("firstName", firstNameInput.getText());
+        personalInfo.put("lastName", lastNameInput.getText());
+        String fullDob = dobInput.getText();
+        personalInfo.put("dob", fullDob);
+        String[] dobPieces = fullDob.split("/");
+        personalInfo.put("month", dobPieces[0]);
+        personalInfo.put("day", dobPieces[1]);
+        personalInfo.put("year", dobPieces[2]);
+        String fullPhone = phoneNumberInput.getText();
+        personalInfo.put("fullPhone", fullPhone);
+        String[] phonePieces = fullPhone.split("-");
+        personalInfo.put("first 3 phone", phonePieces[0]);
+        personalInfo.put("second 3 phone", phonePieces[1]);
+        personalInfo.put("last 4 phone", phonePieces[2]);
+        String street = streetInput.getText();
+        personalInfo.put("street", street);
+        personalInfo.put("street no space", streetInput.getText().replace(" ", ""));
+        String[] streetPieces = street.split(" ");
+        for (int i = 0; i < streetPieces.length; i++) personalInfo.put("street" + i, piece);
+        personalInfo.put("aptNo", aptNoInput.getText());
+        personalInfo.put("city", cityInput.getText());
+        personalInfo.put("state", stateInput.getText());
+        personalInfo.put("zipcode", zipcodeInput.getText());
+        personalInfo.put("email", emailInput.getText());
+
+        return personalInfo;
     }
 
     private void submit() {
