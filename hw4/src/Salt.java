@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class Salt {
 
-    private HashKetchum hk = new HashKetchum();
+    private HashKetchum gottaHashEmAll = new HashKetchum();
     private String saltFile = "salts.txt";
     private String passFile = "passwords.txt";
 
@@ -42,7 +42,7 @@ public class Salt {
      * @return a salt string
      */
     private String produceSalt() {
-        return hk.performHash(produceLongRandom());
+        return gottaHashEmAll.performHash(produceLongRandom());
     }
 
     /**
@@ -51,8 +51,8 @@ public class Salt {
      * @param salt the salt to be hashed with password
      * @return a string value of the hashed password + salt value
      */
-    private String produceHashPass(String password, String salt) {
-        return hk.performHash(password + salt);
+    public String produceHashPass(String password, String salt) {
+        return gottaHashEmAll.performHash(password + salt);
     }
 
     /**
