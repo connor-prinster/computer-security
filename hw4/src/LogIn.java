@@ -1,4 +1,6 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -47,7 +49,28 @@ public class LogIn extends Application {
         final Text outputMessage = new Text();
         loginGrid.add(outputMessage, 1, 6);
 
+        final int attempt = 0;
+
+        passwordInput.setOnAction(e -> {
+            if (authenticatePassword(usernameInput.getText(), passwordInput.getText())) {
+                //log in
+            }
+            else {
+                //wrong password
+                String message = lockOut(attempt);
+                outputMessage.setText("Wrong Password");
+            }
+        });
+
         primaryStage.show();
+    }
+
+    private static boolean authenticatePassword(String username, String password) {
+        return false;
+    }
+
+    private static String lockOut(int attempt) {
+        return "Wrong Password" + attempt;
     }
 
 }
