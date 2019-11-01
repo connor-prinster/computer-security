@@ -11,13 +11,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
+
 
 public class CreateAccount extends Application {
 
@@ -47,6 +43,8 @@ public class CreateAccount extends Application {
     private TextField passwordInput = new TextField();
     private TextField retypePasswordInput = new TextField();
     private Label passwordError = new Label("");
+
+    private HashMap<String, ArrayList<String>> possiblePasswords;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -84,7 +82,7 @@ public class CreateAccount extends Application {
 
     private void createInfoListThenPassword(Group root) {
 
-        HashMap<String, String> personalInfo = createMapForPersonInfo();
+        possiblePasswords = createMapForPersonInfo();
 
         PasswordTester passwordTester = new PasswordTester();
         passwordTester.CreatePersonalPasswords(personalInfo);
