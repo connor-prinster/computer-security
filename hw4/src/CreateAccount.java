@@ -86,7 +86,8 @@ public class CreateAccount extends Application {
 
         HashMap<String, String> personalInfo = createMapForPersonInfo();
 
-
+        PasswordTester passwordTester = new PasswordTester();
+        passwordTester.CreatePersonalPasswords(personalInfo);
 
         root.getChildren().clear();
 
@@ -145,7 +146,7 @@ public class CreateAccount extends Application {
         personalInfo.put("street", street);
         personalInfo.put("street no space", streetInput.getText().replace(" ", ""));
         String[] streetPieces = street.split(" ");
-        for (int i = 0; i < streetPieces.length; i++) personalInfo.put("street" + i, piece);
+        for (int i = 0; i < streetPieces.length; i++) personalInfo.put("street" + i, streetPieces[i]);
         personalInfo.put("aptNo", aptNoInput.getText());
         personalInfo.put("city", cityInput.getText());
         personalInfo.put("state", stateInput.getText());
