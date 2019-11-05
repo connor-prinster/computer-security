@@ -197,8 +197,44 @@ public class PasswordTester {
         return list;
     }
 
+    private Map<String, List<String>> personalVariations(String key, String value, List<String> sufs) {
+        Map<String, List<String>> list = new HashMap<>();
+        List<String> a = new ArrayList<>();
+        a.add(value);
+        for(String b : sufs) {
+            a.add(value + b);
+        }
+        a = addSingleReplacements(a);
+        list.put(key, a);
+        return list;
+    }
+
     public Map<String, List<String>> CreatePersonalPasswords(Map<String, String> info) {
         Map<String, List<String>> list = new HashMap<>();
+        
+        List<String> suffixes = new ArrayList<>();
+        suffixes.add(info.get("month"));
+        suffixes.add(info.get("day"));
+        suffixes.add(info.get("year"));
+        suffixes.add(info.get("first 3 phone"));
+        suffixes.add(info.get("second 3 phone"));
+        suffixes.add(info.get("last 4 phone"));
+        suffixes.add(info.get("zipcode"));
+        suffixes.add(info.get("aptNo"));
+        int i = 0;
+        while(info.containsKey("street" + Integer.toString(i))) {
+            suffixes.add(info.get("street" + Integer.toString(i)));
+            i++;
+        }
+
+        list.putAll(personalVariations("First Name", info.get("firstName"), suffixes));
+        list.putAll(personalVariations("Last Name", info.get("lastName"), suffixes));
+        list.putAll(personalVariations("Date of Birth", info.get("dob"), suffixes));
+        list.putAll(personalVariations("Phone Number", info.get("fullPhone"), suffixes));
+        list.putAll(personalVariations("Street", info.get("street"), suffixes));
+        list.putAll(personalVariations("City", info.get("city"), suffixes));
+        list.putAll(personalVariations("State", info.get("state"), suffixes));
+        list.putAll(personalVariations("Email", info.get("email").split("@")[0], suffixes));
 
         return list;
     }
