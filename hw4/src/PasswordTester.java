@@ -205,6 +205,7 @@ public class PasswordTester {
             a.add(value + b);
         }
         a = addSingleReplacements(a);
+        a = addNumbers(a);
         list.put(key, a);
         return list;
     }
