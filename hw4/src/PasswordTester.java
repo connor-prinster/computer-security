@@ -206,6 +206,7 @@ public class PasswordTester {
         }
         a = addSingleReplacements(a);
         a = addNumbers(a);
+        a = capitalizeWords(a);
         list.put(key, a);
         return list;
     }
@@ -217,8 +218,7 @@ public class PasswordTester {
         suffixes.add(info.get("month"));
         suffixes.add(info.get("day"));
         suffixes.add(info.get("year"));
-        suffixes.add(info.get("first 3 phone"));
-        suffixes.add(info.get("second 3 phone"));
+        suffixes.add(info.get("first 6 phone"));
         suffixes.add(info.get("last 4 phone"));
         suffixes.add(info.get("zipcode"));
         suffixes.add(info.get("aptNo"));
@@ -236,7 +236,20 @@ public class PasswordTester {
         list.putAll(personalVariations("City", info.get("city"), suffixes));
         list.putAll(personalVariations("State", info.get("state"), suffixes));
         list.putAll(personalVariations("Email", info.get("email").split("@")[0], suffixes));
+        list.putAll(personalVariations("Zip Code", info.get("zipcode"), suffixes));
 
+        String[] emailParts = info.get("email").split("[^a-zA-Z0-9]+");
+        List<String> a = list.get("Email");
+        for(String part : emailParts) {
+            a.addAll(personalVariations("gg", part, suffixes).get("gg"));
+        }
+        list.put("Email", a);
+
+        a = list.get("Phone Number");
+        a.addAll(personalVariations("gg", info.get("first 6 phone"), suffixes).get("gg"));
+        list.put("Phone Number", a);
+
+        
         return list;
     }
 

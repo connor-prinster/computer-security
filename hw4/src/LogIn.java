@@ -1,6 +1,4 @@
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,6 +10,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.Map;
 
 public class LogIn extends Application {
 
@@ -49,11 +49,12 @@ public class LogIn extends Application {
         final Text outputMessage = new Text();
         loginGrid.add(outputMessage, 1, 6);
 
-        final int attempt = 0;
+        int attempt = 0;
 
-        passwordInput.setOnAction(e -> {
+        signInButton.setOnAction(e -> {
             if (authenticatePassword(usernameInput.getText(), passwordInput.getText())) {
                 //log in
+                outputMessage.setText("Login Succcccccccessssfulllllll");
             }
             else {
                 //wrong password
@@ -66,6 +67,14 @@ public class LogIn extends Application {
     }
 
     private static boolean authenticatePassword(String username, String password) {
+        Salt saltyFriend = new Salt();
+        Map<String, Map<String, String>> userLoginInfo = saltyFriend.getUserPassSalt();
+        Map<String, String> saltPass = userLoginInfo.get(username);
+        for(String salt:saltPass.values()) {
+            if (saltPass.containsKey(saltyFriend.produceHashPass(password, salt))) {
+                return true;
+            }
+        }
         return false;
     }
 
