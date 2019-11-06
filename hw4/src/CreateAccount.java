@@ -43,7 +43,8 @@ public class CreateAccount extends Application {
     private TextField retypePasswordInput = new TextField();
     private Label passwordError = new Label("");
 
-    private Map<String, List<String>> possiblePasswords;
+    private Map<String, List<String>> possibleCommonPasswords;
+    private Map<String, List<String>> possiblePersonalPasswords;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -81,10 +82,9 @@ public class CreateAccount extends Application {
 
     private void createInfoListThenPassword(Group root) {
 
-
-
         PasswordTester passwordTester = new PasswordTester();
-        possiblePasswords = passwordTester.CreateFullInfoPasswordList(createMapForPersonInfo());
+        possibleCommonPasswords = passwordTester.CreateCommonVariationList();
+        possiblePersonalPasswords = passwordTester.CreatePersonalPasswords(createMapForPersonInfo());
 
         root.getChildren().clear();
 
@@ -155,62 +155,34 @@ public class CreateAccount extends Application {
 
     private void submit() {
         String password = passwordInput.getText();
-        Set<String> keys = possiblePasswords.keySet();
+        Set<String> keys = possibleCommonPasswords.keySet();
         boolean isInList = false;
-        int iters = 0;
         for (String key : keys) {
-            List<String> passwords = possiblePasswords.get(key);
+            List<String> passwords = possibleCommonPasswords.get(key);
             for (int i = 0; i < passwords.size(); i++) {
                 if (password.equals(passwords.get(i))) {
-                    if (iters < 30) passwordError.setText("You picked a password prone to dictionary attack with a variation of the word " + key);
-                    else passwordError.setText("You picked a password prone to targeting attack with your info in the field " + key);
+                    passwordError.setText("You picked a password prone to dictionary attack with a variation of the word " + key);
                     isInList = true;
                     break;
                 }
-                if (isInList) break;
             }
-            iters++;
+        }
+        if (isInList) return;
+        keys = possiblePersonalPasswords.keySet();
+        for (String key : keys) {
+            List<String> passwords = possiblePersonalPasswords.get(key);
+            for (int i = 0; i < passwords.size(); i++) {
+                if (password.equals(passwords.get(i))) {
+                    passwordError.setText("You picked a password prone to targeting attack with your info in the field " + key);
+                    isInList = true;
+                    break;
+                }
+            }
         }
         if (!isInList) {
+            passwordError.setText("Valid Password");
             Salt salt = new Salt();
             salt.generateSaltPasswords(emailInput.getText(), password);
         }
     }
-
-//    private void readPublicKeys() {
-//        try {
-//            File publicKeyFile = new File("public.key");
-//            Scanner readFile = new Scanner(publicKeyFile);
-//            String publicKeys[] = new String[2];
-//            int i = 0;
-//            while (readFile.hasNextLine()) {
-//                publicKeys[i] = readFile.nextLine();
-//                System.out.println("Received " + publicKeys[i]);
-//                i++;
-//            }
-//            readFile.close();
-//            rpn = Integer.parseInt(publicKeys[0]);
-//            m = Integer.parseInt(publicKeys[1]);
-//            System.out.println("Successful :)");
-//        } catch (Exception e) {
-//            System.out.println(e);
-//            System.out.println("Unsuccessful...");
-//        }
-//    }
-//
-//    private void encryptStuff() {
-//        //code to encrypt stuff
-//        String cipherResult = Encryption.encrypt(rpn, m, plainText.getText());
-//        cipherText.setText(cipherResult);
-//        // write the cipher text to a file to copy and paste to the decryption gui
-//        File publicKeyFile = new File("public.key");
-//        try {
-//            FileWriter fileWriter = new FileWriter(publicKeyFile, true);
-//            fileWriter.write(cipherResult + "\n");
-//            fileWriter.close();
-//        } catch (IOException e) {
-//            System.out.println(e);
-//            System.out.println("Couldn't write the cipher text to public.key");
-//        }
-//    }
 }
