@@ -15,6 +15,8 @@ import java.util.Map;
 
 public class LogIn extends Application {
 
+    private static int attempt;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Login");
@@ -49,17 +51,19 @@ public class LogIn extends Application {
         final Text outputMessage = new Text();
         loginGrid.add(outputMessage, 1, 6);
 
-        int attempt = 0;
+        setAttempt(0);
 
         signInButton.setOnAction(e -> {
             if (authenticatePassword(usernameInput.getText(), passwordInput.getText())) {
                 //log in
                 outputMessage.setText("Login Succcccccccessssfulllllll");
+                setAttempt(0);
             }
             else {
                 //wrong password
-                String message = lockOut(attempt);
-                outputMessage.setText("Wrong Password");
+                incrementAttempt();
+                String message = lockOut(getAttempt());
+                outputMessage.setText(message);
             }
         });
 
@@ -70,16 +74,28 @@ public class LogIn extends Application {
         Salt saltyFriend = new Salt();
         Map<String, Map<String, String>> userLoginInfo = saltyFriend.getUserPassSalt();
         Map<String, String> saltPass = userLoginInfo.get(username);
-        for(String salt:saltPass.values()) {
-            if (saltPass.containsKey(saltyFriend.produceHashPass(password, salt))) {
-                return true;
-            }
-        }
-        return false;
+        System.out.println();
+
+        String correctPassword = saltPass.get("password");
+        String correctSalt = saltPass.get("salt");
+        String inputHashPass = saltyFriend.produceHashPass(password, correctSalt);
+
+        return (inputHashPass.equals(correctPassword));
     }
 
     private static String lockOut(int attempt) {
         return "Wrong Password" + attempt;
     }
 
+    public static int getAttempt() {
+        return attempt;
+    }
+
+    public static void setAttempt(int a) {
+        attempt = a;
+    }
+
+    public static void incrementAttempt() {
+        attempt++;
+    }
 }
