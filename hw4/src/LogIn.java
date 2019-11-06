@@ -15,6 +15,8 @@ import java.util.Map;
 
 public class LogIn extends Application {
 
+    private static int attempt;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Login");
@@ -49,17 +51,19 @@ public class LogIn extends Application {
         final Text outputMessage = new Text();
         loginGrid.add(outputMessage, 1, 6);
 
-        int attempt = 0;
+        setAttempt(0);
 
         signInButton.setOnAction(e -> {
             if (authenticatePassword(usernameInput.getText(), passwordInput.getText())) {
                 //log in
                 outputMessage.setText("Login Succcccccccessssfulllllll");
+                setAttempt(0);
             }
             else {
                 //wrong password
-                String message = lockOut(attempt);
-                outputMessage.setText("Wrong Password");
+                incrementAttempt();
+                String message = lockOut(getAttempt());
+                outputMessage.setText(message);
             }
         });
 
@@ -82,4 +86,15 @@ public class LogIn extends Application {
         return "Wrong Password" + attempt;
     }
 
+    public static int getAttempt() {
+        return attempt;
+    }
+
+    public static void setAttempt(int a) {
+        attempt = a;
+    }
+
+    public static void incrementAttempt() {
+        attempt++;
+    }
 }
