@@ -15,6 +15,8 @@ import java.util.Map;
 
 public class LogIn extends Application {
 
+    Salt s = new Salt();
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Login");
@@ -70,12 +72,13 @@ public class LogIn extends Application {
         Salt saltyFriend = new Salt();
         Map<String, Map<String, String>> userLoginInfo = saltyFriend.getUserPassSalt();
         Map<String, String> saltPass = userLoginInfo.get(username);
-        for(String salt:saltPass.values()) {
-            if (saltPass.containsKey(saltyFriend.produceHashPass(password, salt))) {
-                return true;
-            }
-        }
-        return false;
+        System.out.println();
+
+        String correctPassword = saltPass.get("password");
+        String correctSalt = saltPass.get("salt");
+        String inputHashPass = saltyFriend.produceHashPass(password, correctSalt);
+
+        return (inputHashPass.equals(correctPassword));
     }
 
     private static String lockOut(int attempt) {
