@@ -52,7 +52,7 @@ public class CreateAccount extends Application {
         primaryStage.setTitle("Create Account");
         Group root = new Group();
         root.getChildren().add(pane);
-        primaryStage.setScene(new Scene(root, 350, 400));
+        primaryStage.setScene(new Scene(root, 500, 400));
 
 
         Button submitInfo = new Button("Submit");
@@ -136,8 +136,7 @@ public class CreateAccount extends Application {
         String fullPhone = phoneNumberInput.getText();
         personalInfo.put("fullPhone", fullPhone);
         String[] phonePieces = fullPhone.split("-");
-        personalInfo.put("first 3 phone", phonePieces[0]);
-        personalInfo.put("second 3 phone", phonePieces[1]);
+        personalInfo.put("first 6 phone", (phonePieces[0] + phonePieces[1]));
         personalInfo.put("last 4 phone", phonePieces[2]);
         String street = streetInput.getText();
         personalInfo.put("street", street);
@@ -155,6 +154,10 @@ public class CreateAccount extends Application {
 
     private void submit() {
         String password = passwordInput.getText();
+        if (password.length() < 6) {
+            passwordError.setText("Please create a password with at least 6 characters");
+            return;
+        }
         Set<String> keys = possibleCommonPasswords.keySet();
         boolean isInList = false;
         for (String key : keys) {
@@ -180,7 +183,7 @@ public class CreateAccount extends Application {
             }
         }
         if (!isInList) {
-            passwordError.setText("Valid Password");
+            passwordError.setText("Valid Password, You're Account Has Been Created");
             Salt salt = new Salt();
             salt.generateSaltPasswords(emailInput.getText(), password);
         }
