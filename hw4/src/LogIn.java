@@ -21,7 +21,7 @@ public class LogIn extends Application {
     private static long timeUnlocked = 0;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("Login");
 
         GridPane loginGrid = new GridPane();
@@ -91,7 +91,7 @@ public class LogIn extends Application {
     private static String lockOut(int attempt) {
         String message = "Wrong Password";
         if (timeUnlocked < System.currentTimeMillis() && getAttempt() % ATTEMPT_NUM == 0) {
-            long millisUntilUnlocked = toMillis((int)Math.pow(2, (attempt/ATTEMPT_NUM) - 1));
+            long millisUntilUnlocked = toMillis((int)Math.pow(2, (double)(attempt/ATTEMPT_NUM) - 1));
             timeUnlocked = System.currentTimeMillis() + millisUntilUnlocked;
         }
         else if (getAttempt() % ATTEMPT_NUM == 0) {
@@ -103,11 +103,11 @@ public class LogIn extends Application {
         return message;
     }
 
-    static double toMinutes(long millis) {
+    private static double toMinutes(long millis) {
         return ((double) millis)/60000;
     }
 
-    static long toMillis(int minutes) {
+    private static long toMillis(int minutes) {
         return (long)minutes*60000;
     }
 
