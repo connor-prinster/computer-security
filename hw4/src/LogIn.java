@@ -11,11 +11,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 public class LogIn extends Application {
 
     private static int attempt;
+    private static final int ATTEMPT_NUM = 3;
+    private static long timeUnlocked = 0;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -54,14 +57,16 @@ public class LogIn extends Application {
         setAttempt(0);
 
         signInButton.setOnAction(e -> {
-            if (authenticatePassword(usernameInput.getText(), passwordInput.getText())) {
+            if (timeUnlocked < System.currentTimeMillis() && authenticatePassword(usernameInput.getText(), passwordInput.getText())) {
                 //log in
                 outputMessage.setText("Login Succcccccccessssfulllllll");
                 setAttempt(0);
             }
             else {
                 //wrong password
-                incrementAttempt();
+                if (timeUnlocked < System.currentTimeMillis()) {
+                    incrementAttempt();
+                }
                 String message = lockOut(getAttempt());
                 outputMessage.setText(message);
             }
@@ -84,18 +89,37 @@ public class LogIn extends Application {
     }
 
     private static String lockOut(int attempt) {
-        return "Wrong Password" + attempt;
+        String message = "Wrong Password";
+        if (timeUnlocked < System.currentTimeMillis() && getAttempt() % ATTEMPT_NUM == 0) {
+            long millisUntilUnlocked = toMillis((int)Math.pow(2, (attempt/ATTEMPT_NUM) - 1));
+            timeUnlocked = System.currentTimeMillis() + millisUntilUnlocked;
+        }
+        else if (getAttempt() % ATTEMPT_NUM == 0) {
+            message += ("\nYou have made " + getAttempt() + " incorrect attempts.\n");
+            DecimalFormat twoDecimalPlaces = new DecimalFormat("###.##");
+            double minutesLeft = toMinutes(timeUnlocked - System.currentTimeMillis());
+            message += ("Please wait " + twoDecimalPlaces.format(minutesLeft) + " minutes before trying again.");
+        }
+        return message;
     }
 
-    public static int getAttempt() {
+    static double toMinutes(long millis) {
+        return ((double) millis)/60000;
+    }
+
+    static long toMillis(int minutes) {
+        return (long)minutes*60000;
+    }
+
+    private static int getAttempt() {
         return attempt;
     }
 
-    public static void setAttempt(int a) {
+    private static void setAttempt(int a) {
         attempt = a;
     }
 
-    public static void incrementAttempt() {
+    private static void incrementAttempt() {
         attempt++;
     }
 }
