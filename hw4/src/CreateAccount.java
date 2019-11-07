@@ -120,6 +120,8 @@ public class CreateAccount extends Application {
         pane.setBottom(vbox3);
         pane.setAlignment(vbox3, Pos.CENTER);
 
+        passwordError.setStyle("-fx-text-fill: red;");
+
         root.getChildren().add(pane);
     }
 
@@ -154,6 +156,11 @@ public class CreateAccount extends Application {
 
     private void submit() {
         String password = passwordInput.getText();
+        String retypePassword = retypePasswordInput.getText();
+        if (!password.equals(retypePassword)) {
+            passwordError.setText("Your passwords don't match");
+            return;
+        }
         if (password.length() < 6) {
             passwordError.setText("Please create a password with at least 6 characters");
             return;
