@@ -14,6 +14,7 @@ public class PasswordTester {
     private List<String> commonWords;
     private char[] specialCharacters;
     private Map<Character, List<Character>> replacementChars;
+    private String fileName = "";
 
     public PasswordTester() {
         try {
@@ -265,7 +266,7 @@ public class PasswordTester {
         List<String> a = FlattenMap(pt.CreateCommonVariationList());
         System.out.println(String.format("Total number of %d permutations", a.size()));
         try {
-            DumpStringListToFile(a, "temporary_FILE");
+            DumpStringListToFile(a, "elcp1.txt");
         } catch (Exception e) {
             e.printStackTrace();
         }

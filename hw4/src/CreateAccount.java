@@ -158,7 +158,7 @@ public class CreateAccount extends Application {
         String password = passwordInput.getText();
         String retypePassword = retypePasswordInput.getText();
         if (!password.equals(retypePassword)) {
-            passwordError.setText("Your passwords don't match");
+            passwordError.setText("Your passwords don't match\n");
             return;
         }
         if (password.length() < 6) {
@@ -171,7 +171,7 @@ public class CreateAccount extends Application {
             List<String> passwords = possibleCommonPasswords.get(key);
             for (int i = 0; i < passwords.size(); i++) {
                 if (password.equals(passwords.get(i))) {
-                    passwordError.setText("You picked a password prone to dictionary attack with a variation of the word " + key);
+                    passwordError.setText("You picked a password prone to dictionary attack with a variation of the word " + key + "\nPlease create a stronger password.");
                     isInList = true;
                     break;
                 }
@@ -183,7 +183,7 @@ public class CreateAccount extends Application {
             List<String> passwords = possiblePersonalPasswords.get(key);
             for (int i = 0; i < passwords.size(); i++) {
                 if (password.equals(passwords.get(i))) {
-                    passwordError.setText("You picked a password prone to targeting attack with your info in the field " + key);
+                    passwordError.setText("You picked a password prone to targeting attack with your info in the field " + key + "\nPlease pick a stronger password.");
                     isInList = true;
                     break;
                 }
