@@ -4,6 +4,8 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+**/.idea/encodings.xml
+**/.idea/vcs.xml
 workspace.xml
 
 # Generated files
