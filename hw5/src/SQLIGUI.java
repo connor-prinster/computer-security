@@ -52,6 +52,15 @@ public class SQLIGUI extends Application {
     }
 
     private void submit(String query) {
+        int comments = containsComments(query);
+        sqlQueryReport.setText(comments == 100 ? "This query is 100% SQL attack because it contains the '--' (comment) characters for SQL" : "This is 0% an SQL query");
+    }
 
+    private int containsComments(String query) {
+        for (int i = 0; i < query.length(); i++) {
+            if ("-".equals(query.charAt(i)) && i != (query.length()-1) && "-".equals(query.charAt(i+1))) {
+                return 100;
+            }
+        }
     }
 }
