@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Phishing {
     private String emailAddress;
@@ -92,5 +94,22 @@ public class Phishing {
         }
 
         parsedList = normalized.split(" ");
+    }
+
+    public int CheckConsequences(String body) {
+        String reg = "(close|closed|compromised|compromise|action|expose|keylogger|bitcoin|misdemeanor|humiliation|sextape|warrent|arrest|unpleasant|illegal)";
+        return matchCount(reg, body);
+    }
+    public int CheckRedemption(String body) {
+        String reg = "(congratulations|redeem|claim|take|won|win|prize|contest|winner|winning|offer|gift|surprise|compensation|delivery|inheritance|deposit|fee|success|check|cheque|reward|award|payment)";
+        return matchCount(reg, body);
+    }
+
+    private int matchCount(String regex, String test) {
+        Pattern r = Pattern.compile(regex);
+        Matcher m = r.matcher(test);
+        int count = 0;
+        while(m.find()) count++;
+        return count;
     }
 }
