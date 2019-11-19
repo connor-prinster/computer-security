@@ -62,5 +62,6 @@ public class SQLIGUI extends Application {
                 return 100;
             }
         }
+        return 0;
     }
 }
