@@ -6,34 +6,13 @@ import java.util.regex.Pattern;
 public class Phishing {
     private String emailAddress;
     private String emailBody;
-    private ArrayList<String> religiousFigures;
     private String[] parsedList;
 
     public Phishing(String emailAddress, String emailBody) {
         this.emailAddress = emailAddress;
         this.emailBody = emailBody;
         normalizeEmailBody();
-        generateReligiousFigures();
         checkEmailThreat();
-    }
-
-    private void generateReligiousFigures() {
-        ArrayList<String> arr = new ArrayList<>();
-        // selections from https://en.wikipedia.org/wiki/List_of_religious_titles_and_styles and https://en.wikipedia.org/wiki/List_of_titles
-        Collections.addAll(arr, "president", "vice", "prophet", "mister", "judge", "caliph", "centurion", "chief", "consort", "count", "countess", "doctor", "earl", "countess", "emperor", "empress", "esquire", "squire", "admiral", "master", "herald", "highness", "majesty", "lady", "mandarin", "mayor", "saint", "sergeant", "tsar", "tsaritsa", "prince", "king", "princess", "baron", "baroness", "darth", "bishop", "pastor", "rabbi", "deacon", "priest", "cardinal", "chaplain", "church", "priestess", "pope", "vicar", "dalai lama", "patriarch", "archbishop", "monk", "abbess", "nun", "apostle", "elder", "reverend", "chaplain", "god", "saint", "imam", "mullah", "sultan", "sultana", "witch", "priestess", "druid", "chairman", "officer", "lord");
-        religiousFigures = arr;
-    }
-
-    public int checkReligiousFigures() {
-        int count = 0;
-
-        for(String word : parsedList) {
-            if(religiousFigures.contains(word)) {
-                count++;
-            }
-        }
-
-        return count;
     }
 
     public int checkEmailThreat() {
@@ -94,6 +73,11 @@ public class Phishing {
         }
 
         parsedList = normalized.split(" ");
+    }
+
+    public int checkReligiousFigures() {
+        String reg = "(president|vice|prophet|mister|judge|caliph|centurion|chief|consort|count|countess|doctor|earl|countess|emperor|empress|esquire|squire|admiral|master|herald|highness|majesty|lady|mandarin|mayor|saint|sergeant|tsar|tsaritsa|prince|king|princess|baron|baroness|darth|bishop|pastor|rabbi|deacon|priest|cardinal|chaplain|church|priestess|pope|vicar|dalai lama|patriarch|archbishop|monk|abbess|nun|apostle|elder|reverend|chaplain|god|saint|imam|mullah|sultan|sultana|witch|priestess|druid|chairman|officer|lord)";
+        return matchCount(reg, emailBody);
     }
 
     public int CheckConsequences() {
