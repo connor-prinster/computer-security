@@ -13,12 +13,12 @@
 # SQLI
 
 * char()
-* union
-* --
+* union - done
+* -- - done
 * semicolon
 * tautology
 * initial apostrophe
 * illogical
 * empty space
-* update
-* select
+* update - done
+* select - done
