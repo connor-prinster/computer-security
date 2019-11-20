@@ -52,19 +52,27 @@ public class SQLIGUI extends Application {
     }
 
     private void submit(String query) {
-        int comments = containsComments(query);
-        sqlQueryReport.setText(comments == 100 ? "This query is 100% SQL attack because it contains the '--' (comment) characters for SQL" : "This is 0% an SQL query");
-    }
-
-    private int containsComments(String query) {
-        Character dash = '-';
-        for (int i = 0; i < query.length(); i++) {
-//            System.out.println(dash.equals(query.charAt(i)));
-//            System.out.println("-" + " first and actual query " + query.charAt(i));
-            if (dash.equals(query.charAt(i)) && i != (query.length()-1) && dash.equals(query.charAt(i+1))) {
-                return 100;
-            }
+        SQLI checker = new SQLI(query);
+        int total = 0;
+        int largest = 0;
+        String reason = "";
+        int comments = checker.containsComments(); total+=comments;
+        if (comments > largest) {
+            largest = comments;
+            reason = "--";
         }
-        return 0;
+        int union = checker.checkUnion(); total+=union;
+        if (union > largest) {
+            largest = union;
+            reason = "--";
+        }
+        int select = checker.checkSelect(); total+=select;
+        int update = checker.checkUpdate(); total+=update;
+        int tautology = checker.checkTautology(); total+=tautology;
+        int apostropheFirst = checker.checkFirstApostrophe(); total+=apostropheFirst;
+        int apostropheAll = checker.checkAllApostrophe();total+=apostropheAll;
+        int charac = checker.checkChar();total+=charac;
+//        int next = checker.
+        sqlQueryReport.setText(comments == 100 ? "This query is 100% SQL attack because it contains the '--' (comment) characters for SQL" : "This is 0% an SQL query");
     }
 }

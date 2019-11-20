@@ -2,19 +2,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SQLI {
-    private String statement;
+    private String query;
 
-    public SQLI(String statement) {
-        this.statement = statement.toUpperCase();
+    public SQLI(String query) {
+        this.query = query.toUpperCase();
     }
 
-    private int checkUnion(String str) {
+    public int checkUnion() {
         String union = "UNION";
-        return matchCount(union, str);
+        return matchCount(union);
     }
     
-    private int checkTautology(String str) {
-        Matcher m = (Pattern.compile("\\s(\\w*)=(\\w*)").matcher(str));;
+    public int checkTautology() {
+        Matcher m = (Pattern.compile("\\s(\\w*)=(\\w*)").matcher(query));;
         int count = 0;
         while(m.find()) {
             if(m.group(0).equals(m.group(1))) count++;
@@ -22,31 +22,41 @@ public class SQLI {
         return count;
     }
 
-    private int checkSelect(String str) {
+    public int checkSelect() {
         String select = "SELECT";
-        return matchCount(select, str);
+        return matchCount(select);
     }
 
-    private int checkUpdate(String str) {
+    public int checkUpdate() {
         String update = "UPDATE";
-        return matchCount(update, str);
+        return matchCount(update);
     }
 
-    private int checkFirstApostrophe(String str) {
+    public int checkFirstApostrophe() {
         Character apostrophe = '\'';
-        return apostrophe.equals(str.charAt(0)) ? 1 : 0;
+        return apostrophe.equals(query.charAt(0)) ? 1 : 0;
     }
 
-    private int checkAllApostrophe(String str) {
+    public int checkAllApostrophe() {
         String apostrophe = "\'";
-        return matchCount(apostrophe, str);
+        return matchCount(apostrophe);
     }
 
-    private int matchCount(String regex, String test) {
+    public int checkChar() {
+        String charact = "CHAR(";
+        return matchCount(charact);
+    }
+
+    private int matchCount(String regex) {
         Pattern r = Pattern.compile(regex);
-        Matcher m = r.matcher(test);
+        Matcher m = r.matcher(query);
         int count = 0;
         while(m.find()) count++;
         return count;
+    }
+
+    public int containsComments() {
+        String comment = "--";
+        return matchCount(comment);
     }
 }
