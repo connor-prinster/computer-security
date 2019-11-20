@@ -105,6 +105,16 @@ public class Phishing {
         return matchCount(reg, emailBody);
     }
 
+    public int CheckImmediacy() {
+        String reg = "(now|urgent|urgently|immediate|immediately|soon|expire|expired|expires)";
+        return matchCount(reg, emailBody);
+    }
+
+//    public int CheckURLThreat() {
+//        String reg = "()";
+//        return matchCount(reg, emailBody);
+//    }
+
     private int matchCount(String regex, String test) {
         Pattern r = Pattern.compile(regex);
         Matcher m = r.matcher(test);
