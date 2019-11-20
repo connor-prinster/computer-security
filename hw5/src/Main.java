@@ -13,15 +13,24 @@ public class Main {
         String email = "he11o@paypa1.corn";
         String tragedy = "Did you ever hear the tragedy of Darth Plagueis The Wise? I thought not. It's not a story the Jedi would tell you. It's a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to create life… He had such a knowledge of the dark side that he could even keep the ones he cared about from dying. The dark side of the Force is a pathway to many abilities some consider to be unnatural. He became so powerful… the only thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he taught his apprentice everything he knew, then his apprentice killed him in his sleep. Ironic. He could save others from death, but not himself";
 
-        double threatLevel = 0;
+        int totalThreats = 0;
         Phishing tragedyPhishing = new Phishing(email, tragedy);
-        threatLevel += tragedyPhishing.checkPositionsOfAuthority() * AUTHORITY;
-        threatLevel += tragedyPhishing.checkEmailThreat() * SPEAR_FISHING;
-        threatLevel += tragedyPhishing.CheckConsequences() * CONSEQUENCES;
-        threatLevel += tragedyPhishing.CheckRedemption() * REDEMPTION;
-        threatLevel += tragedyPhishing.CheckImmediacy() * IMMEDIACY;
+        int positionsOfAuthority = tragedyPhishing.checkPositionsOfAuthority();
+        int spearFishing = tragedyPhishing.checkEmailThreat();
+        int consequences = tragedyPhishing.CheckConsequences();
+        int redemption = tragedyPhishing.CheckRedemption();
+        int immediacy = tragedyPhishing.CheckImmediacy();
+        totalThreats += (positionsOfAuthority + spearFishing + consequences + redemption + immediacy);
+
+        double threatLevel = 0;
+        threatLevel += positionsOfAuthority * AUTHORITY;
+        threatLevel += spearFishing * SPEAR_FISHING;
+        threatLevel += consequences * CONSEQUENCES;
+        threatLevel += redemption * REDEMPTION;
+        threatLevel += immediacy * IMMEDIACY;
         threatLevel *= 100;
-        String percentStatement = "Threat of phishing: " + ((int)threatLevel / COUNT_CHECKS) + "%";
+        int threatPercent = ((int)threatLevel / COUNT_CHECKS);
+        String percentStatement = "Total threats: " + totalThreats + "\nThreat of phishing: " + threatPercent + "%";
 
         System.out.println(percentStatement);
     }
