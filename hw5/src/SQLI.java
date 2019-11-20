@@ -32,6 +32,16 @@ public class SQLI {
         return matchCount(update, str);
     }
 
+    private int checkFirstApostrophe(String str) {
+        Character apostrophe = '\'';
+        return apostrophe.equals(str.charAt(0)) ? 1 : 0;
+    }
+
+    private int checkAllApostrophe(String str) {
+        String apostrophe = "\'";
+        return matchCount(apostrophe, str);
+    }
+
     private int matchCount(String regex, String test) {
         Pattern r = Pattern.compile(regex);
         Matcher m = r.matcher(test);
