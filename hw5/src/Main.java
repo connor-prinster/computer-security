@@ -9,6 +9,7 @@ public class Main {
         count += tragedyPhishing.checkEmailThreat();
         count += tragedyPhishing.CheckConsequences();
         count += tragedyPhishing.CheckRedemption();
+        count += tragedyPhishing.CheckImmediacy();
         System.out.println(count);
     }
 }
