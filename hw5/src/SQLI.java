@@ -12,8 +12,14 @@ public class SQLI {
         String union = "UNION";
         return matchCount(union, str);
     }
+    
     private int checkTautology(String str) {
-        String reg = ""
+        Matcher m = (Pattern.compile("\\s(\\w*)=(\\w*)").matcher(str));;
+        int count = 0;
+        while(m.find()) {
+            if(m.group(0).equals(m.group(1))) count++;
+        }
+        return count;
     }
 
     private int checkSelect(String str) {
