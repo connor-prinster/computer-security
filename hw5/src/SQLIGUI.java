@@ -64,14 +64,38 @@ public class SQLIGUI extends Application {
         int union = checker.checkUnion(); total+=union;
         if (union > largest) {
             largest = union;
-            reason = "--";
+            reason = "UNION";
         }
         int select = checker.checkSelect(); total+=select;
+        if (select > largest) {
+            largest = select;
+            reason = "SELECT";
+        }
         int update = checker.checkUpdate(); total+=update;
+        if (update > largest) {
+            largest = update;
+            reason = "UPDATE";
+        }
         int tautology = checker.checkTautology(); total+=tautology;
+        if (tautology > largest) {
+            largest = tautology;
+            reason = "#=#";
+        }
         int apostropheFirst = checker.checkFirstApostrophe(); total+=apostropheFirst;
+        if (apostropheFirst > largest) {
+            largest = apostropheFirst;
+            reason = "\' at the beginning";
+        }
         int apostropheAll = checker.checkAllApostrophe();total+=apostropheAll;
+        if (apostropheAll > largest) {
+            largest = apostropheAll;
+            reason = "many \'";
+        }
         int charac = checker.checkChar();total+=charac;
+        if (charac > largest) {
+            largest = charac;
+            reason = "CHAR(";
+        }
 //        int next = checker.
         sqlQueryReport.setText(comments == 100 ? "This query is 100% SQL attack because it contains the '--' (comment) characters for SQL" : "This is 0% an SQL query");
     }
