@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,7 +73,7 @@ public class Phishing {
         parsedList = normalized.split(" ");
     }
 
-    public int checkReligiousFigures() {
+    public int checkPositionsOfAuthority() {
         String reg = "(president|vice|prophet|mister|judge|caliph|centurion|chief|consort|count|countess|doctor|earl|countess|emperor|empress|esquire|squire|admiral|master|herald|highness|majesty|lady|mandarin|mayor|saint|sergeant|tsar|tsaritsa|prince|king|princess|baron|baroness|darth|bishop|pastor|rabbi|deacon|priest|cardinal|chaplain|church|priestess|pope|vicar|dalai lama|patriarch|archbishop|monk|abbess|nun|apostle|elder|reverend|chaplain|god|saint|imam|mullah|sultan|sultana|witch|priestess|druid|chairman|officer|lord)";
         return matchCount(reg, emailBody);
     }
@@ -88,6 +86,16 @@ public class Phishing {
         String reg = "(congratulations|redeem|claim|take|won|win|prize|contest|winner|winning|offer|gift|surprise|compensation|delivery|inheritance|deposit|fee|success|check|cheque|reward|award|payment)";
         return matchCount(reg, emailBody);
     }
+
+    public int CheckImmediacy() {
+        String reg = "(now|urgent|urgently|immediate|immediately|soon|expire|expired|expires)";
+        return matchCount(reg, emailBody);
+    }
+
+//    public int CheckURLThreat() {
+//        String reg = "()";
+//        return matchCount(reg, emailBody);
+//    }
 
     private int matchCount(String regex, String test) {
         Pattern r = Pattern.compile(regex);
