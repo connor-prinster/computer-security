@@ -26,7 +26,7 @@ public class SQLIGUI extends Application {
         primaryStage.setTitle("Create Account");
         Group root = new Group();
         root.getChildren().add(pane);
-        primaryStage.setScene(new Scene(root, 600, 400));
+        primaryStage.setScene(new Scene(root, 700, 400));
 
         Button submit = new Button("Submit");
         submit.setOnAction(e -> {
@@ -57,8 +57,11 @@ public class SQLIGUI extends Application {
     }
 
     private int containsComments(String query) {
+        Character dash = '-';
         for (int i = 0; i < query.length(); i++) {
-            if ("-".equals(query.charAt(i)) && i != (query.length()-1) && "-".equals(query.charAt(i+1))) {
+//            System.out.println(dash.equals(query.charAt(i)));
+//            System.out.println("-" + " first and actual query " + query.charAt(i));
+            if (dash.equals(query.charAt(i)) && i != (query.length()-1) && dash.equals(query.charAt(i+1))) {
                 return 100;
             }
         }

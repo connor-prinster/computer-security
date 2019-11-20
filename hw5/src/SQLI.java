@@ -16,6 +16,16 @@ public class SQLI {
         String reg = ""
     }
 
+    private int checkSelect(String str) {
+        String select = "SELECT";
+        return matchCount(select, str);
+    }
+
+    private int checkUpdate(String str) {
+        String update = "UPDATE";
+        return matchCount(update, str);
+    }
+
     private int matchCount(String regex, String test) {
         Pattern r = Pattern.compile(regex);
         Matcher m = r.matcher(test);
