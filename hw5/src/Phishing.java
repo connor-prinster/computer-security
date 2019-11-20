@@ -80,7 +80,7 @@ public class Phishing {
         return count;
     }
 
-    public Boolean reputableDomain(String domain) {
+    private Boolean reputableDomain(String domain) {
         return (domain.equals("com") || domain.equals("org") || domain.equals("edu") || domain.equals("net"));
     }
 
@@ -96,13 +96,13 @@ public class Phishing {
         parsedList = normalized.split(" ");
     }
 
-    public int CheckConsequences(String body) {
+    public int CheckConsequences() {
         String reg = "(close|closed|compromised|compromise|action|expose|keylogger|bitcoin|misdemeanor|humiliation|sextape|warrent|arrest|unpleasant|illegal)";
-        return matchCount(reg, body);
+        return matchCount(reg, emailBody);
     }
-    public int CheckRedemption(String body) {
+    public int CheckRedemption() {
         String reg = "(congratulations|redeem|claim|take|won|win|prize|contest|winner|winning|offer|gift|surprise|compensation|delivery|inheritance|deposit|fee|success|check|cheque|reward|award|payment)";
-        return matchCount(reg, body);
+        return matchCount(reg, emailBody);
     }
 
     private int matchCount(String regex, String test) {

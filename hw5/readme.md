@@ -2,12 +2,12 @@
 
 # Phishing
 
-* royalty or religious figures - Connor
+* royalty or religious figures
 * immediacy - Jazlyn
-* consequences - Kaleb
-* sketchy email address - Connor
+* consequences
+* sketchy email address
 * sketchy urls - Jazlyn
-* redeem - Kaleb
+* redeem
 
 
 # SQLI
