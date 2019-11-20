@@ -5,12 +5,15 @@ public class SQLI {
     private String statement;
 
     public SQLI(String statement) {
-        this.statement = statement;
+        this.statement = statement.toUpperCase();
     }
 
     private int checkUnion(String str) {
-        String union = "union";
+        String union = "UNION";
         return matchCount(union, str);
+    }
+    private int checkTautology(String str) {
+        String reg = ""
     }
 
     private int matchCount(String regex, String test) {
