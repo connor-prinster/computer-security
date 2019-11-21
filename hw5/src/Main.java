@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Main {
 
 
@@ -23,16 +25,36 @@ public class Main {
         totalThreats += (positionsOfAuthority + spearFishing + consequences + redemption + immediacy);
 
         double threatLevel = 0;
-        threatLevel += positionsOfAuthority * AUTHORITY;
-        threatLevel += spearFishing * SPEAR_FISHING;
-        threatLevel += consequences * CONSEQUENCES;
-        threatLevel += redemption * REDEMPTION;
-        threatLevel += immediacy * IMMEDIACY;
+        double positionsOfAuthorityThreat = positionsOfAuthority * AUTHORITY;
+        double spearFishingThreat = spearFishing * SPEAR_FISHING;
+        double consequencesThreat = consequences * CONSEQUENCES;
+        double redemptionThreat = redemption * REDEMPTION;
+        double immediacyThreat = immediacy * IMMEDIACY;
+
+        ArrayList<Double> threatList = new ArrayList<>();
+        Collections.addAll(threatList, positionsOfAuthorityThreat,spearFishingThreat, consequencesThreat, redemptionThreat, immediacyThreat);
+        double max = Collections.max(threatList);
+        Map<Double, String> threats = new HashMap<>();
+        threats.put(positionsOfAuthorityThreat, "Positions of Authority");
+        threats.put(spearFishingThreat, "Spear Fishing");
+        threats.put(consequencesThreat, "Threat of Consequences");
+        threats.put(redemptionThreat, "Threat of Redemption Scam");
+        threats.put(immediacyThreat, "Threat of Immediacy Scam");
+        String largestThreat = threats.get(max);
+
+        threatLevel += positionsOfAuthorityThreat;
+        threatLevel += spearFishingThreat;
+        threatLevel += consequencesThreat;
+        threatLevel += redemptionThreat;
+        threatLevel += immediacyThreat;
         threatLevel *= 100;
         int threatPercent = ((int)threatLevel / COUNT_CHECKS);
-        String percentStatement = "Total threats: " + totalThreats + "\nThreat of phishing: " + threatPercent + "%";
 
-        System.out.println(percentStatement);
+        String threatStatement = "Total threats: " + totalThreats + "" +
+                "\nThreat of phishing: " + threatPercent + "%" +
+                "\nThe largest threat is " + largestThreat + "\n";
+
+        System.out.println(threatStatement);
     }
 }
 
