@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,8 +11,23 @@ public class Phishing {
     public Phishing(String emailAddress, String emailBody) {
         this.emailAddress = emailAddress;
         this.emailBody = emailBody;
+        checkUrlThreat();
         normalizeEmailBody();
         checkEmailThreat();
+    }
+
+    public int checkUrlThreat() {
+        int count = 0;
+
+        List<String> urls = new ArrayList<>();
+        Matcher m = Pattern.compile("/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm").matcher(emailBody);
+
+        while(m.find()) {
+            urls.add(m.group());
+            count++;
+        }
+
+        return count;
     }
 
     public int checkEmailThreat() {
@@ -91,11 +108,6 @@ public class Phishing {
         String reg = "(now|urgent|urgently|immediate|immediately|soon|expire|expired|expires)";
         return matchCount(reg, emailBody);
     }
-
-//    public int CheckURLThreat() {
-//        String reg = "()";
-//        return matchCount(reg, emailBody);
-//    }
 
     private int matchCount(String regex, String test) {
         Pattern r = Pattern.compile(regex);

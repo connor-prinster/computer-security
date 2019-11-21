@@ -3,10 +3,10 @@
 # Phishing
 
 * royalty or religious figures
-* immediacy - Jazlyn
+* immediacy
 * consequences
 * sketchy email address
-* sketchy urls - Jazlyn
+* sketchy urls
 * redeem
 
 
