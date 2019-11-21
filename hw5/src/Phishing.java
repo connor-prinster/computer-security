@@ -30,11 +30,24 @@ public class Phishing {
         int count = 0;
 
         List<String> urls = new ArrayList<>();
-        Matcher m = Pattern.compile("/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm").matcher(emailBody);
+        String urlRegex = "\\\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+        Matcher m = Pattern.compile(urlRegex).matcher(emailBody);
 
         while(m.find()) {
             urls.add(m.group());
             count++;
+        }
+
+        for (String url : urls) {
+            if (!(url.contains("https") || url.contains("shttp"))) {    // not ssl secured
+                count++;
+            }
+            if (url.split(".").length > 3) {    // look for extra strings in the domain name
+                count++;
+            }
+            if (url.matches("[^a-zA-Z]")) {     // look for numbers and special characters in the domain name
+                count++;
+            }
         }
 
         return count;
@@ -106,7 +119,7 @@ public class Phishing {
     }
 
     public int CheckConsequences() {
-        String reg = "(close|closed|compromised|compromise|action|expose|keylogger|bitcoin|misdemeanor|humiliation|sextape|warrent|arrest|unpleasant|illegal)";
+        String reg = "(close|closed|compromised|compromise|action|expose|keylogger|bitcoin|misdemeanor|humiliation|sextape|warrant|arrest|unpleasant|illegal)";
         return matchCount(reg, emailBody);
     }
     public int CheckRedemption() {
