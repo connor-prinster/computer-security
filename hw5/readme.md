@@ -16,7 +16,7 @@
 * union - done
 * -- - done
 * semicolon
-* tautology
+* tautology - done
 * initial apostrophe
 * illogical
 * empty space
