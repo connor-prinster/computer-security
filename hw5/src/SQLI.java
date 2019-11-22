@@ -47,6 +47,16 @@ public class SQLI {
         return matchCount(charact);
     }
 
+    public int checkAscii() {
+        String asc = "ASCII(";
+        return matchCount(asc);
+    }
+
+    public int checkSubstring() {
+        String sub = "SUBSTRING(";
+        return matchCount(sub);
+    }
+
     private int matchCount(String regex) {
         Pattern r = Pattern.compile(regex);
         Matcher m = r.matcher(query);

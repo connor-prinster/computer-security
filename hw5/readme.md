@@ -24,8 +24,8 @@
 * select - done
 * from
 * >, < 
-* ASCII()
-* substring()
+* ASCII() - done
+* substring() - done
 * piggy-backed (admin' --, '; drop table users --)
 * inference (putting 1=0 then 1=1, or ASCII(SUBSTRIN()) > X WAITFOR 5 --)
 * alternate encodings (legalUser'; exec(char(0x1098314e)) --, legalUser';exec(SHUTDOWN))
