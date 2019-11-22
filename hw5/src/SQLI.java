@@ -17,8 +17,12 @@ public class SQLI {
         Matcher m = (Pattern.compile("\\s(\\w*)=(\\w*)").matcher(query));;
         int count = 0;
         while(m.find()) {
-            if(m.group(0).equals(m.group(1))) count++;
+            String[] split = m.group().split("=");
+            if(split[0].trim().equals(split[1].trim())) {
+                count++;
+            }
         }
+        System.out.println(count);
         return count;
     }
 
