@@ -14,3 +14,17 @@ iphone
 ipad
 ipod
 win
+microsoft
+outlook
+office
+paypal
+facebook
+netflix
+apple
+cibc
+dhl
+docusign
+google
+gmail
+yahoo
+dropbox
