@@ -3,10 +3,10 @@
 # Phishing
 
 * royalty or religious figures
-* immediacy - Jazlyn
+* immediacy
 * consequences
 * sketchy email address
-* sketchy urls - Jazlyn
+* sketchy urls
 * redeem
 
 
@@ -17,6 +17,7 @@
 * -- - done
 * semicolon
 * tautology - done
+<<<<<<< HEAD
 * initial apostrophe - done
 * illogical
 * empty space

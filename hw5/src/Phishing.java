@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -5,12 +10,47 @@ public class Phishing {
     private String emailAddress;
     private String emailBody;
     private String[] parsedList;
+    private final static double SPEAR_FISHING = 0.4;
+    private final static double URLS = 0.4;
+    private final static double IMMEDIACY = 0.1;
+    private final static double AUTHORITY = 0.033;
+    private final static double CONSEQUENCES = 0.033;
+    private final static double REDEMPTION = 0.033;
+    private final static int COUNT_CHECKS = 5;
 
     public Phishing(String emailAddress, String emailBody) {
         this.emailAddress = emailAddress;
         this.emailBody = emailBody;
+        checkUrlThreat();
         normalizeEmailBody();
         checkEmailThreat();
+    }
+
+    public int checkUrlThreat() {
+        int count = 0;
+
+        List<String> urls = new ArrayList<>();
+        String urlRegex = "\\\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+        Matcher m = Pattern.compile(urlRegex).matcher(emailBody);
+
+        while(m.find()) {
+            urls.add(m.group());
+            count++;
+        }
+
+        for (String url : urls) {
+            if (!(url.contains("https") || url.contains("shttp"))) {    // not ssl secured
+                count++;
+            }
+            if (url.split(".").length > 3) {    // look for extra strings in the domain name
+                count++;
+            }
+            if (url.matches("[^a-zA-Z]")) {     // look for numbers and special characters in the domain name
+                count++;
+            }
+        }
+
+        return count;
     }
 
     public int checkEmailThreat() {
@@ -79,7 +119,7 @@ public class Phishing {
     }
 
     public int CheckConsequences() {
-        String reg = "(close|closed|compromised|compromise|action|expose|keylogger|bitcoin|misdemeanor|humiliation|sextape|warrent|arrest|unpleasant|illegal)";
+        String reg = "(close|closed|compromised|compromise|action|expose|keylogger|bitcoin|misdemeanor|humiliation|sextape|warrant|arrest|unpleasant|illegal)";
         return matchCount(reg, emailBody);
     }
     public int CheckRedemption() {
@@ -92,16 +132,51 @@ public class Phishing {
         return matchCount(reg, emailBody);
     }
 
-//    public int CheckURLThreat() {
-//        String reg = "()";
-//        return matchCount(reg, emailBody);
-//    }
-
     private int matchCount(String regex, String test) {
         Pattern r = Pattern.compile(regex);
         Matcher m = r.matcher(test);
         int count = 0;
         while(m.find()) count++;
         return count;
+    }
+
+    public String returnThreatString() {
+        int totalThreats = 0;
+        int positionsOfAuthority = checkPositionsOfAuthority();
+        int spearFishing = checkEmailThreat();
+        int consequences = CheckConsequences();
+        int redemption = CheckRedemption();
+        int immediacy = CheckImmediacy();
+        totalThreats += (positionsOfAuthority + spearFishing + consequences + redemption + immediacy);
+
+        double threatLevel = 0;
+        double positionsOfAuthorityThreat = positionsOfAuthority * AUTHORITY;
+        double spearFishingThreat = spearFishing * SPEAR_FISHING;
+        double consequencesThreat = consequences * CONSEQUENCES;
+        double redemptionThreat = redemption * REDEMPTION;
+        double immediacyThreat = immediacy * IMMEDIACY;
+
+        ArrayList<Double> threatList = new ArrayList<>();
+        Collections.addAll(threatList, positionsOfAuthorityThreat,spearFishingThreat, consequencesThreat, redemptionThreat, immediacyThreat);
+        double max = Collections.max(threatList);
+        Map<Double, String> threats = new HashMap<>();
+        threats.put(positionsOfAuthorityThreat, "Positions of Authority");
+        threats.put(spearFishingThreat, "Spear Fishing");
+        threats.put(consequencesThreat, "Threat of Consequences");
+        threats.put(redemptionThreat, "Threat of Redemption Scam");
+        threats.put(immediacyThreat, "Threat of Immediacy Scam");
+        String largestThreat = threats.get(max);
+
+        threatLevel += positionsOfAuthorityThreat;
+        threatLevel += spearFishingThreat;
+        threatLevel += consequencesThreat;
+        threatLevel += redemptionThreat;
+        threatLevel += immediacyThreat;
+        threatLevel *= 100;
+        int threatPercent = ((int)threatLevel / COUNT_CHECKS);
+
+        return "Total threats: " + totalThreats + "" +
+                "\nThreat of phishing: " + threatPercent + "%" +
+                "\nThe largest threat is " + largestThreat + "\n";
     }
 }
