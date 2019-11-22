@@ -15,7 +15,6 @@ public class SQLI {
     private final static double SPACES = 0.1;
     private final static double TAUTOLOGY = 0.3;
     private final static double PIGGY = 0.7;
-    private final static int COUNT_CHECKS = 8;
 
     public SQLI(String query) {
         this.query = query.toUpperCase();
@@ -120,32 +119,64 @@ public class SQLI {
         totalThreats += (comments + alternateEncodings + firstApostrophe + allApostrophe + statements + spaces + tautology + piggy);
 
         double threatLevel = 0;
-        double commentsThreat = comments * COMMENTS;
-        double alternateEncodingsThreat = alternateEncodings * ALTERNATE_ENCODINGS;
-        double firstApostropheThreat = firstApostrophe * FIRST_APOSTROPHE;
-        double allApostropheThreat = allApostrophe * ALL_APOSTROPHE;
-        double statementsThreat = statements * STATEMENTS;
-        double spacesThreat = spaces * SPACES;
-        double tautologyThreat = tautology * TAUTOLOGY;
-        double piggyThreat = piggy * PIGGY;
-
         ArrayList<Double> threatList = new ArrayList<>();
-        Collections.addAll(threatList, commentsThreat,alternateEncodingsThreat, firstApostropheThreat, allApostropheThreat, statementsThreat, spacesThreat, tautologyThreat, piggyThreat);
-        double max = Collections.max(threatList);
         Map<Double, String> threats = new HashMap<>();
-        threats.put(commentsThreat, "Comments (\"--\")");
-        threats.put(alternateEncodingsThreat, "Alternate Encodings ex. CHAR(), CONVERT(), ASCII(), EXEC(), EXEC(CHAR()), SUBSTRING()");
-        threats.put(firstApostropheThreat, "Apostrophe at the beginning of the input");
-        threats.put(allApostropheThreat, "Apostrophies throughout the input that could close the input early");
-        threats.put(statementsThreat, "Standard SQL Statements such as SELECT, FROM, WHERE, UNION, UPDATE, DROP, etc.");
-        threats.put(spacesThreat, "Spaces throughout the input");
-        threats.put(tautologyThreat, "Tautology, such as 1=1, 5>A, etc.");
-        threats.put(piggyThreat, "Piggy-backed query where the input contains an apostrophe followed by a comment or semicolon");
+
+        if (comments != 0) {
+            double commentsThreat = comments * COMMENTS;
+            threatLevel+=commentsThreat;
+            threats.put(commentsThreat, "Comments (\"--\")");
+            Collections.addAll(threatList, commentsThreat);
+        }
+        if (alternateEncodings != 0) {
+            double alternateEncodingsThreat = alternateEncodings * ALTERNATE_ENCODINGS;
+            threatLevel+=alternateEncodingsThreat;
+            threats.put(alternateEncodingsThreat, "Alternate Encodings ex. CHAR(), CONVERT(), ASCII(), EXEC(), EXEC(CHAR()), SUBSTRING()");
+            Collections.addAll(threatList, alternateEncodingsThreat);
+        }
+        if (firstApostrophe != 0) {
+            double firstApostropheThreat = firstApostrophe * FIRST_APOSTROPHE;
+            threatLevel+=firstApostropheThreat;
+            threats.put(firstApostropheThreat, "Apostrophe at the beginning of the input");
+            Collections.addAll(threatList, firstApostropheThreat);
+        }
+        if (allApostrophe != 0) {
+            double allApostropheThreat = allApostrophe * ALL_APOSTROPHE;
+            threatLevel+=allApostropheThreat;
+            threats.put(allApostropheThreat, "Apostrophies throughout the input that could close the input early");
+            Collections.addAll(threatList, allApostropheThreat);
+        }
+        if (statements != 0) {
+            double statementsThreat = statements * STATEMENTS;
+            threatLevel+=statementsThreat;
+            threats.put(statementsThreat, "Standard SQL Statements such as SELECT, FROM, WHERE, UNION, UPDATE, DROP, etc.");
+            Collections.addAll(threatList, statementsThreat);
+        }
+        if (spaces != 0) {
+            double spacesThreat = spaces * SPACES;
+            threatLevel+=spacesThreat;
+            threats.put(spacesThreat, "Spaces throughout the input");
+            Collections.addAll(threatList, spacesThreat);
+        }
+        if (tautology != 0) {
+            double tautologyThreat = tautology * TAUTOLOGY;
+            threatLevel+=tautologyThreat;
+            threats.put(tautologyThreat, "Tautology, such as 1=1, 5>A, etc.");
+            Collections.addAll(threatList, tautologyThreat);
+        }
+        if (piggy != 0) {
+            double piggyThreat = piggy * PIGGY;
+            threatLevel+=piggyThreat;
+            threats.put(piggyThreat, "Piggy-backed query where the input contains an apostrophe followed by a comment or semicolon");
+            Collections.addAll(threatList, piggyThreat);
+        }
+
+//        Collections.addAll(threatList, commentsThreat,alternateEncodingsThreat, firstApostropheThreat, allApostropheThreat, statementsThreat, spacesThreat, tautologyThreat, piggyThreat);
+        double max = Collections.max(threatList);
         String largestThreat = threats.get(max);
 
-        threatLevel += (commentsThreat + alternateEncodingsThreat + firstApostropheThreat + allApostropheThreat + statementsThreat + spacesThreat + tautologyThreat + piggyThreat);
         threatLevel *= 100;
-        int threatPercent = ((int)threatLevel / COUNT_CHECKS);
+        int threatPercent = ((int)threatLevel / totalThreats);
 
         return "Total threats: " + totalThreats + "" +
                 "\nThreat of SQLI: " + threatPercent + "%" +

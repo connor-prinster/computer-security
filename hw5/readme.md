@@ -11,7 +11,7 @@
 
 
 # SQLI
-
+# NOTE TO SELVES PERCENTAGE IS NOT RIGHT IN SQLI
 * char() - done
 * union - done
 * -- - done
