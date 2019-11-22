@@ -16,13 +16,13 @@ public class PasswordTester {
 
     public PasswordTester() {
         try {
-            Path pf = new File("words.txt").toPath();
+            Path pf = new File("scammable.txt").toPath();
             commonWords = Files.readAllLines(pf);
 
-            Path cf = new File("SpecialCharacterList.txt").toPath();
+            Path cf = new File("specialChars.txt").toPath();
             specialCharacters = Files.readAllLines(cf).get(0).toCharArray();
 
-            Path rf = new File("Possible Character Replacements.txt").toPath();
+            Path rf = new File("possibleReplacements.txt").toPath();
             replacementChars = new HashMap<>();
             for (String s : Files.readAllLines(rf)) {
                 char key = s.charAt(0);
@@ -105,7 +105,7 @@ public class PasswordTester {
         PasswordTester pt = new PasswordTester();
         List<String> a = PasswordTester.FlattenMap(pt.CreateCommonVariationList());
         try {
-            PasswordTester.DumpStringListToFile(a, "scamSites.txt");
+            PasswordTester.DumpStringListToFile(a, "scams.txt");
         } catch (Exception e) {
             e.printStackTrace();
         }
