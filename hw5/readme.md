@@ -9,7 +9,6 @@
 * sketchy urls
 * redeem
 
-
 # SQLI
 # NOTE TO SELVES PERCENTAGE IS NOT RIGHT IN SQLI
 * char() - done

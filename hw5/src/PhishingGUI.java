@@ -32,7 +32,7 @@ public class PhishingGUI extends Application {
 
         Button submit = new Button("Submit");
         submit.setOnAction(e -> {
-            submit(emailId.getText(), emailBodyInput.getText());
+            submit(emailIdInput.getText(), emailBodyInput.getText());
         });
 
         GridPane gridPane = new GridPane();
@@ -56,6 +56,7 @@ public class PhishingGUI extends Application {
     }
 
     private void submit(String id, String body) {
-
+        Phishing phishing = new Phishing(id, body);
+        emailPhishingReport.setText(phishing.returnThreatString());
     }
 }
