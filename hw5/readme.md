@@ -9,7 +9,6 @@
 * sketchy urls
 * redeem
 
-
 # SQLI
 
 * char() - done

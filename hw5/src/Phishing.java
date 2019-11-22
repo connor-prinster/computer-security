@@ -64,6 +64,9 @@ public class Phishing {
         int count = 0;
 
         String[] splitAddress = emailAddress.split("@");
+        if(splitAddress.length < 1) {
+            return -1;
+        }
         String user = splitAddress[0];
         String company = splitAddress[1];
         String[] splitCompany = company.split("\\.");

@@ -8,8 +8,7 @@ public class Main {
 
         Phishing tragedyPhishing = new Phishing(email, tragedy);
 
-        SQLI sqli = new SQLI(" 1=1\n3=3");
-        sqli.checkTautology();
+        PasswordTester.generateFile();
     }
 }
 
