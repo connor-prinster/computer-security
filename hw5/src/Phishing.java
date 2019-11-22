@@ -1,3 +1,4 @@
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -30,12 +31,18 @@ public class Phishing {
         int count = 0;
 
         List<String> urls = new ArrayList<>();
-        String urlRegex = "\\\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
-        Matcher m = Pattern.compile(urlRegex).matcher(emailBody);
 
-        while(m.find()) {
-            urls.add(m.group());
-            count++;
+        String[] emailWords = emailBody.split("\b");
+
+        for (String word : emailWords) {
+            try {
+                new URL(word).toURI();
+                urls.add(word);
+                count++;
+            }
+            catch (Exception e) {
+                // do nothing
+            }
         }
 
         for (String url : urls) {
@@ -45,7 +52,7 @@ public class Phishing {
             if (url.split(".").length > 3) {    // look for extra strings in the domain name
                 count++;
             }
-            if (url.matches("[^a-zA-Z]")) {     // look for numbers and special characters in the domain name
+            if (url.matches("[^a-zA-Z/.]")) {     // look for numbers and special characters in the domain name
                 count++;
             }
         }
