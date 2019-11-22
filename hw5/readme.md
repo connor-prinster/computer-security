@@ -18,14 +18,14 @@
 * semicolon
 * tautology - done
 * initial apostrophe - done
-* illogical/illegal (convert(), )
-* empty space
+* illogical/illegal (convert(), ) - done?
+* empty space - done
 * update - done
 * select - done
-* from
+* from - done
 * >, < 
 * ASCII() - done
 * substring() - done
-* piggy-backed (admin' --, '; drop table users --)
+* piggy-backed (admin' --, '; drop table users --) - done?
 * inference (putting 1=0 then 1=1, or ASCII(SUBSTRIN()) > X WAITFOR 5 --)
-* alternate encodings (legalUser'; exec(char(0x1098314e)) --, legalUser';exec(SHUTDOWN))
+* alternate encodings (legalUser'; exec(char(0x1098314e)) --, legalUser';exec(SHUTDOWN)) - done?
