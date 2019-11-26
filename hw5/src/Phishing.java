@@ -1,4 +1,8 @@
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -10,24 +14,22 @@ import java.util.regex.Pattern;
 public class Phishing {
     private String emailAddress;
     private String emailBody;
-    private String[] parsedList;
     private final static double SPEAR_FISHING = 0.4;
     private final static double URLS = 0.4;
     private final static double IMMEDIACY = 0.1;
     private final static double AUTHORITY = 0.033;
     private final static double CONSEQUENCES = 0.033;
     private final static double REDEMPTION = 0.033;
-    private final static int COUNT_CHECKS = 5;
+    private final static double MISSPELLED = 0.01;
+    private final static int COUNT_CHECKS = 6;
 
     public Phishing(String emailAddress, String emailBody) {
         this.emailAddress = emailAddress;
         this.emailBody = emailBody;
-        checkUrlThreat();
         normalizeEmailBody();
-        checkEmailThreat();
     }
 
-    public int checkUrlThreat() {
+    private int checkUrlThreat() {
         int count = 0;
 
         List<String> urls = new ArrayList<>();
@@ -60,12 +62,12 @@ public class Phishing {
         return count;
     }
 
-    public int checkEmailThreat() {
+    private int checkEmailThreat() {
         int count = 0;
 
         String[] splitAddress = emailAddress.split("@");
         if(splitAddress.length < 1) {
-            return -1;
+            return 0;
         }
         String user = splitAddress[0];
         String company = splitAddress[1];
@@ -75,17 +77,20 @@ public class Phishing {
 
         String containsDigits = "[0-9]";
         String containsAlpha = "[A-Za-z]";
+        String containsHyphen = "[-]";
+        String containsUnderscore = "[_]";
+        String reputableDomain = "(com|org|edu|net|gov)";
 
         // === Check the Username === //
-        if(user.split(containsAlpha).length == 0) { // if there are no letters, probably supersketch
+        if(matchCount(containsAlpha, user) == 0) { // if there are no letters in the username, probs sketch
             count++;
         }
 
-        // === Check the Company === //
-        if(companyName.split("-").length > 0) { //catches *-validSite.com or whatever
+        if(matchCount(containsHyphen, companyName) > 0) { // catches login-microsoft or whatever
             count++;
         }
-        if(companyName.split("_").length > 0) { //catches *_validSite.com or whatever
+
+        if(matchCount(containsUnderscore, companyName) > 0) { //catches *_validSite.com or whatever
             count++;
         }
 
@@ -94,21 +99,19 @@ public class Phishing {
             count++;
         }
 
-        if(!reputableDomain(domain)) { // if org/com/net/edu
+        if(matchCount(reputableDomain, domain) == 0) {
             count++;
         }
-        if(domain.split(containsDigits).length > 0) { // see if there are characters in the domain
+
+        if(matchCount(containsAlpha, domain) == 0) { // see if no characters in domain (for example *.111 probably isn't legit)
             count++;
         }
-        if(domain.split(containsAlpha).length == 0) { // if there is nothing other than numbers in the domain
+
+        if(matchCount(containsDigits, domain) > 0) { // see if there are ANY numbers in domain (*.paypal2 probably isn't valid)
             count++;
         }
 
         return count;
-    }
-
-    private Boolean reputableDomain(String domain) {
-        return (domain.equals("com") || domain.equals("org") || domain.equals("edu") || domain.equals("net"));
     }
 
     private void normalizeEmailBody() {
@@ -116,30 +119,50 @@ public class Phishing {
         String[] parsed = emailBody.split(" ");
 
         for(String str : parsed) {
-            normalized += str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+            normalized += str.replaceAll("[^a-zA-Z0-9@!$]", "").toLowerCase();
             normalized += " ";
         }
 
-        parsedList = normalized.split(" ");
+        emailBody = normalized;
     }
 
-    public int checkPositionsOfAuthority() {
+    private int checkPositionsOfAuthority() {
         String reg = "(president|vice|prophet|mister|judge|caliph|centurion|chief|consort|count|countess|doctor|earl|countess|emperor|empress|esquire|squire|admiral|master|herald|highness|majesty|lady|mandarin|mayor|saint|sergeant|tsar|tsaritsa|prince|king|princess|baron|baroness|darth|bishop|pastor|rabbi|deacon|priest|cardinal|chaplain|church|priestess|pope|vicar|dalai lama|patriarch|archbishop|monk|abbess|nun|apostle|elder|reverend|chaplain|god|saint|imam|mullah|sultan|sultana|witch|priestess|druid|chairman|officer|lord)";
         return matchCount(reg, emailBody);
     }
 
-    public int CheckConsequences() {
+    private int CheckConsequences() {
         String reg = "(close|closed|compromised|compromise|action|expose|keylogger|bitcoin|misdemeanor|humiliation|sextape|warrant|arrest|unpleasant|illegal)";
         return matchCount(reg, emailBody);
     }
-    public int CheckRedemption() {
+
+    private int CheckRedemption() {
         String reg = "(congratulations|redeem|claim|take|won|win|prize|contest|winner|winning|offer|gift|surprise|compensation|delivery|inheritance|deposit|fee|success|check|cheque|reward|award|payment)";
         return matchCount(reg, emailBody);
     }
 
-    public int CheckImmediacy() {
+    private int CheckImmediacy() {
         String reg = "(now|urgent|urgently|immediate|immediately|soon|expire|expired|expires)";
         return matchCount(reg, emailBody);
+    }
+
+    private int checkDomainMisspellings() {
+        List<String> wordList;
+        try {
+            Path path = new File("scams.txt").toPath();
+            wordList = Files.readAllLines(path);
+            String reg = "(";
+            for(String str : wordList) {
+                reg += (str + "|");
+            }
+            reg = reg.substring(0, reg.length() - 1);
+            reg += ")";
+            return matchCount(reg, emailBody);
+        }
+        catch (IOException ie) {
+            System.out.println("Cannot get data from scams file");
+        }
+        return 0;
     }
 
     private int matchCount(String regex, String test) {
@@ -157,7 +180,9 @@ public class Phishing {
         int consequences = CheckConsequences();
         int redemption = CheckRedemption();
         int immediacy = CheckImmediacy();
-        totalThreats += (positionsOfAuthority + spearFishing + consequences + redemption + immediacy);
+        int url = checkUrlThreat();
+        int misspelled = checkDomainMisspellings();
+        totalThreats += (positionsOfAuthority + spearFishing + consequences + redemption + immediacy + url + misspelled);
 
         double threatLevel = 0;
         double positionsOfAuthorityThreat = positionsOfAuthority * AUTHORITY;
@@ -165,6 +190,8 @@ public class Phishing {
         double consequencesThreat = consequences * CONSEQUENCES;
         double redemptionThreat = redemption * REDEMPTION;
         double immediacyThreat = immediacy * IMMEDIACY;
+        double urlThreat = url * URLS;
+        double misspelledThreat = misspelled * MISSPELLED;
 
         ArrayList<Double> threatList = new ArrayList<>();
         Collections.addAll(threatList, positionsOfAuthorityThreat,spearFishingThreat, consequencesThreat, redemptionThreat, immediacyThreat);
@@ -175,13 +202,20 @@ public class Phishing {
         threats.put(consequencesThreat, "Threat of Consequences");
         threats.put(redemptionThreat, "Threat of Redemption Scam");
         threats.put(immediacyThreat, "Threat of Immediacy Scam");
+        threats.put(urlThreat, "Threat of Sketchy URL");
+        threats.put(misspelledThreat, "Threat of Misspelled Words");
         String largestThreat = threats.get(max);
+        if(max == 0) {
+            largestThreat = "nothing";
+        }
 
         threatLevel += positionsOfAuthorityThreat;
         threatLevel += spearFishingThreat;
         threatLevel += consequencesThreat;
         threatLevel += redemptionThreat;
         threatLevel += immediacyThreat;
+        threatLevel += urlThreat;
+        threatLevel += misspelledThreat;
         threatLevel *= 100;
         int threatPercent = ((int)threatLevel / COUNT_CHECKS);
 

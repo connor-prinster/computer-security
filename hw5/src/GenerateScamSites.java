@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PasswordTester {
+public class GenerateScamSites {
 
     private List<String> commonWords;
     private char[] specialCharacters;
     private Map<Character, List<Character>> replacementChars;
 
-    public PasswordTester() {
+    public GenerateScamSites() {
         try {
             Path pf = new File("scammable.txt").toPath();
             commonWords = Files.readAllLines(pf);
@@ -102,10 +102,10 @@ public class PasswordTester {
     }
 
     public static void generateFile() {
-        PasswordTester pt = new PasswordTester();
-        List<String> a = PasswordTester.FlattenMap(pt.CreateCommonVariationList());
+        GenerateScamSites pt = new GenerateScamSites();
+        List<String> a = GenerateScamSites.FlattenMap(pt.CreateCommonVariationList());
         try {
-            PasswordTester.DumpStringListToFile(a, "scams.txt");
+            GenerateScamSites.DumpStringListToFile(a, "scams.txt");
         } catch (Exception e) {
             e.printStackTrace();
         }
