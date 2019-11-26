@@ -110,6 +110,15 @@ public class SQLI {
         return matchCount(comment);
     }
 
+    public int containsHex() {
+        String pattern = "0x[0-9a-fA-f]+";
+        return matchCount(pattern);
+    }
+
+    public int containsInterference() {
+        return matchCount("WAITFOR") + matchCount("[0|1]=[0|1][\\w\\s]+[0|1]=[0|1]");
+    }
+
     public String returnThreatString() {
         int totalThreats = 0;
         int comments = containsComments();
