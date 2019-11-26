@@ -14,12 +14,12 @@ import java.util.regex.Pattern;
 public class Phishing {
     private String emailAddress;
     private String emailBody;
-    private final static double SPEAR_FISHING = 0.4;
-    private final static double URLS = 0.4;
+    private final static double SPEAR_FISHING = 0.2;
+    private final static double URLS = 0.2;
+    private final static double CONSEQUENCES = 0.2;
     private final static double IMMEDIACY = 0.1;
-    private final static double AUTHORITY = 0.033;
-    private final static double CONSEQUENCES = 0.033;
-    private final static double REDEMPTION = 0.033;
+    private final static double AUTHORITY = 0.1;
+    private final static double REDEMPTION = 0.1;
     private final static double MISSPELLED = 0.01;
     private final static int COUNT_CHECKS = 6;
 
