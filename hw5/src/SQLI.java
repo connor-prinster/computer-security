@@ -7,14 +7,18 @@ import java.util.regex.Pattern;
 
 public class SQLI {
     private String query;
-    private final static double COMMENTS = 0.9;
-    private final static double ALTERNATE_ENCODINGS = 0.9;
-    private final static double FIRST_APOSTROPHE = 0.9;
-    private final static double ALL_APOSTROPHE = 0.1;
-    private final static double STATEMENTS = 0.9;
-    private final static double SPACES = 0.1;
-    private final static double TAUTOLOGY = 0.9;
-    private final static double PIGGY = 0.9;
+    private final static double COMMENTS = 0.167;
+    private final static double ALTERNATE_ENCODINGS = 0.33;
+    private final static double FIRST_APOSTROPHE = 0.167;
+    private final static double STATEMENTS = 0.33;
+    private final static double SPACES = 0.05;
+    private final static double TAUTOLOGY = 0.2;
+    private final static double PIGGY = 0.3;
+    private final static double HEX = 0.02;
+    private final static double INFERENCE = 0.2;
+    private final static double SEMICOLON = 0.33;
+    private final static double ALLIGATORS = 0.05;
+    private final static double ALL_APOSTROPHE = 0.05;
 
     public SQLI(String query) {
         this.query = query.toUpperCase();
@@ -35,7 +39,6 @@ public class SQLI {
                 }
             }
         }
-        System.out.println(count);
         return count;
     }
 
@@ -107,7 +110,7 @@ public class SQLI {
     }
 
     public int containsHex() {
-        String pattern = "0x[0-9a-fA-f]+";
+        String pattern = "0X[0-9a-fA-f]+";
         return matchCount(pattern);
     }
 
@@ -133,80 +136,53 @@ public class SQLI {
         int spaces = checkSpaces();
         int tautology = checkTautology();
         int piggy = checkPiggyBack();
-        totalThreats += (comments + alternateEncodings + firstApostrophe + allApostrophe + statements + spaces + tautology + piggy);
+        int hex = containsHex();
+        int inference = containsInference();
+        int semicolon = checkSemicolon();
+        int alligators = checkAlligators();
+        totalThreats += (comments + alternateEncodings + firstApostrophe + allApostrophe + statements + spaces + tautology + piggy + hex + inference + semicolon + alligators);
+
 
         double threatLevel = 0;
         ArrayList<Double> threatList = new ArrayList<>();
         Map<Double, String> threats = new HashMap<>();
 
-        if (comments != 0) {
-            double commentsThreat = comments * COMMENTS;
-            threatLevel+=commentsThreat;
-            threats.put(commentsThreat, "Comments (\"--\")");
-            Collections.addAll(threatList, commentsThreat);
-        }
-        if (alternateEncodings != 0) {
-            double alternateEncodingsThreat = alternateEncodings * ALTERNATE_ENCODINGS;
-            threatLevel+=alternateEncodingsThreat;
-            threats.put(alternateEncodingsThreat, "Alternate Encodings ex. CHAR(), CONVERT(), ASCII(), EXEC(), EXEC(CHAR()), SUBSTRING()");
-            Collections.addAll(threatList, alternateEncodingsThreat);
-        }
-        if (firstApostrophe != 0) {
-            double firstApostropheThreat = firstApostrophe * FIRST_APOSTROPHE;
-            threatLevel+=firstApostropheThreat;
-            threats.put(firstApostropheThreat, "Apostrophe at the beginning of the input");
-            Collections.addAll(threatList, firstApostropheThreat);
-        }
-        if (allApostrophe != 0) {
-            double allApostropheThreat = allApostrophe * ALL_APOSTROPHE;
-            threatLevel+=allApostropheThreat;
-            threats.put(allApostropheThreat, "Apostrophies throughout the input that could close the input early");
-            Collections.addAll(threatList, allApostropheThreat);
-        }
-        if (statements != 0) {
-            double statementsThreat = statements * STATEMENTS;
-            threatLevel+=statementsThreat;
-            threats.put(statementsThreat, "Standard SQL Statements such as SELECT, FROM, WHERE, UNION, UPDATE, DROP, etc.");
-            Collections.addAll(threatList, statementsThreat);
-        }
-        if (spaces != 0) {
-            double spacesThreat = spaces * SPACES;
-            threatLevel+=spacesThreat;
-            threats.put(spacesThreat, "Spaces throughout the input");
-            Collections.addAll(threatList, spacesThreat);
-        }
-        if (tautology != 0) {
-            double tautologyThreat = tautology * TAUTOLOGY;
-            threatLevel+=tautologyThreat;
-            threats.put(tautologyThreat, "Tautology, such as 1=1, 5>A, etc.");
-            Collections.addAll(threatList, tautologyThreat);
-        }
-        if (piggy != 0) {
-            double piggyThreat = piggy * PIGGY;
-            threatLevel+=piggyThreat;
-            threats.put(piggyThreat, "Piggy-backed query where the input contains an apostrophe followed by a comment or semicolon");
-            Collections.addAll(threatList, piggyThreat);
-        }
+        double commentsThreat = comments * COMMENTS;
+        double alternateEncodingsThreat = alternateEncodings * ALTERNATE_ENCODINGS;
+        double allApostropheThreat = allApostrophe * ALL_APOSTROPHE;
+        double firstApostropheThreat = firstApostrophe * FIRST_APOSTROPHE;
+        double statementsThreat = statements * STATEMENTS;
+        double spacesThreat = spaces * SPACES;
+        double tautologyThreat = tautology * TAUTOLOGY;
+        double piggyThreat = piggy * PIGGY;
+        double hexThreat = hex * HEX;
+        double inferenceThreat = inference * INFERENCE;
+        double semicolonThreat = checkSemicolon() * SEMICOLON;
+        double alligatorsThreat = checkAllApostrophe() * ALLIGATORS;
+        Collections.addAll(threatList, commentsThreat, alternateEncodingsThreat, firstApostropheThreat, statementsThreat, spacesThreat, tautologyThreat, piggyThreat, hexThreat, inferenceThreat, semicolonThreat, alligatorsThreat);
+        double max = Collections.max(threatList);
+        threatLevel += (commentsThreat + alternateEncodingsThreat + allApostropheThreat + firstApostropheThreat + statementsThreat + spacesThreat + tautologyThreat + piggyThreat + hexThreat + inferenceThreat + semicolonThreat + alligatorsThreat);
 
-//        Collections.addAll(threatList, commentsThreat,alternateEncodingsThreat, firstApostropheThreat, allApostropheThreat, statementsThreat, spacesThreat, tautologyThreat, piggyThreat);
-        double max = 0;
-        if(threatList.size() != 0) {
-            max = Collections.max(threatList);
-        }
+        threats.put(commentsThreat, "Comments (\"--\")");
+        threats.put(alternateEncodingsThreat, "Alternate Encodings ex. CHAR(), CONVERT(), ASCII(), EXEC(), EXEC(CHAR()), SUBSTRING()");
+        threats.put(firstApostropheThreat, "Apostrophe at the beginning of the input");
+        threats.put(allApostropheThreat, "Apostrophies throughout the input that could close the input early");
+        threats.put(statementsThreat, "Standard SQL Statements such as SELECT, FROM, WHERE, UNION, UPDATE, DROP, etc.");
+        threats.put(spacesThreat, "Spaces throughout the input");
+        threats.put(tautologyThreat, "Tautology, such as 1=1, 5>A, etc.");
+        threats.put(piggyThreat, "Piggy-backed query where the input contains an apostrophe followed by a comment or semicolon");
+        threats.put(hexThreat, "Concern of users putting a hex encoded string");
+        threats.put(inferenceThreat, "Concern of an inference attack");
+        threats.put(semicolonThreat, "There are semicolons in this query");
+        threats.put(alligatorsThreat, "No sane human uses semicolons in their queries unless they're shifty");
         String largestThreat = threats.get(max);
 
         threatLevel *= 100;
-        int threatPercent = 0;
-        if(totalThreats != 0) {
-            threatPercent = ((int)threatLevel / totalThreats);
-        }
-
-        if (threatPercent > 100) {
-            threatPercent = 100;
-        }
+        threatLevel %= 100;
+        String threatPercent = threatLevel + "%";
 
         return "Total threats: " + totalThreats + "" +
-                "\nThreat of SQLI: " + threatPercent + "%" +
+                "\nThreat of SQLI Attack: " + threatPercent +
                 "\nThe largest threat is " + largestThreat + "\n";
     }
 }

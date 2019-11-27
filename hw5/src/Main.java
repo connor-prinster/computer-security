@@ -6,7 +6,7 @@ public class Main {
         Phishing tragedyPhishing = new Phishing(email, tragedy);
         System.out.println(tragedyPhishing.returnThreatString());
 
-        String sql = "convert >( int, (select top 1 name from sysobjectswhere xtype='u'))";
+        String sql = "convert select select from where( int, (select top 1 name from sysobjectswhere xtype='u'))";
 
         SQLI sqli = new SQLI(sql);
         System.out.println(sqli.returnThreatString());
