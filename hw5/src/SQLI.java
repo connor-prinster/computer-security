@@ -7,14 +7,14 @@ import java.util.regex.Pattern;
 
 public class SQLI {
     private String query;
-    private final static double COMMENTS = 0.7;
+    private final static double COMMENTS = 0.8;
     private final static double ALTERNATE_ENCODINGS = 0.8;
-    private final static double FIRST_APOSTROPHE = 0.4;
+    private final static double FIRST_APOSTROPHE = 0.8;
     private final static double ALL_APOSTROPHE = 0.1;
-    private final static double STATEMENTS = 0.7;
-    private final static double SPACES = 0.1;
-    private final static double TAUTOLOGY = 0.3;
-    private final static double PIGGY = 0.7;
+    private final static double STATEMENTS = 0.8;
+    private final static double SPACES = 0.4;
+    private final static double TAUTOLOGY = 0.8;
+    private final static double PIGGY = 0.8;
 
     public SQLI(String query) {
         this.query = query.toUpperCase();
@@ -29,7 +29,7 @@ public class SQLI {
         int count = 0;
         while(m.find()) {
             String[] split = m.group().split("=");
-            if(split[0].trim().equals(split[1].trim())) {
+            if (split[0].trim().equals(split[1].trim())) {
                 count++;
             }
         }
@@ -42,7 +42,7 @@ public class SQLI {
     }
 
     public int checkAlternateEncodings() {
-        return matchCount("EXEC(CHAR(\\w*))") + matchCount("EXEC(\\w*)") + matchCount("CONVERT(\\w*)") + checkChar() + checkAscii() + checkSubstring();
+        return matchCount("CHAR") + matchCount("EXEC") + matchCount("CONVERT") + checkChar() + checkAscii() + checkSubstring();
     }
 
     public int checkSpaces() {
@@ -80,16 +80,16 @@ public class SQLI {
     }
 
     public int checkChar() {
-        String charact = "CHAR(\\w*)";
+        String charact = "CHAR";
         return matchCount(charact);
     }
 
     public int checkAscii() {
-        return matchCount("ASCII(\\w*)");
+        return matchCount("ASCII");
     }
 
     public int checkSubstring() {
-        return matchCount("SUBSTRING(\\w*)");
+        return matchCount("SUBSTRING");
     }
 
     private int matchCount(String regex) {
