@@ -17,13 +17,14 @@ public class Phishing {
     private final static double SPEAR_FISHING = 0.2;
     private final static double URLS = 0.2;
     private final static double CONSEQUENCES = 0.2;
+    private final static double REDEMPTION = 0.15;
     private final static double IMMEDIACY = 0.1;
     private final static double AUTHORITY = 0.1;
-    private final static double REDEMPTION = 0.1;
-    private final static double MISSPELLED = 0.01;
+    private final static double MISSPELLED = 0.05;
     private final static int COUNT_CHECKS = 7;
 
     public Phishing(String emailAddress, String emailBody) {
+        assert(SPEAR_FISHING + URLS + CONSEQUENCES + REDEMPTION + IMMEDIACY + AUTHORITY + MISSPELLED == 1);
         this.emailAddress = emailAddress;
         this.emailBody = emailBody;
         normalizeEmailBody();
