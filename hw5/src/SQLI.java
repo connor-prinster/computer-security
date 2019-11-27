@@ -7,16 +7,16 @@ import java.util.regex.Pattern;
 
 public class SQLI {
     private String query;
-    private final static double COMMENTS = 0.167;
+    private final static double COMMENTS = 0.33;
     private final static double ALTERNATE_ENCODINGS = 0.33;
-    private final static double FIRST_APOSTROPHE = 0.167;
+    private final static double FIRST_APOSTROPHE = 0.33;
     private final static double STATEMENTS = 0.33;
     private final static double SPACES = 0.05;
     private final static double TAUTOLOGY = 0.2;
-    private final static double PIGGY = 0.3;
-    private final static double HEX = 0.02;
+    private final static double PIGGY = 0.35;
+    private final static double HEX = 0.05;
     private final static double INFERENCE = 0.2;
-    private final static double SEMICOLON = 0.33;
+    private final static double SEMICOLON = 0.16;
     private final static double ALLIGATORS = 0.05;
     private final static double ALL_APOSTROPHE = 0.05;
 
@@ -47,7 +47,7 @@ public class SQLI {
     }
 
     public int checkAlternateEncodings() {
-        return matchCount("CHAR") + matchCount("EXEC") + matchCount("CONVERT") + checkChar() + checkAscii() + checkSubstring();
+        return matchCount("EXEC") + matchCount("CONVERT") + checkChar() + checkAscii() + checkSubstring();
     }
 
     public int checkSpaces() {
@@ -139,7 +139,7 @@ public class SQLI {
         int hex = containsHex();
         int inference = containsInference();
         int semicolon = checkSemicolon();
-        int alligators = checkAlligators();
+        int alligators = checkAlligators();//this with inference checks illegal/illogically incorrect queries
         totalThreats += (comments + alternateEncodings + firstApostrophe + allApostrophe + statements + spaces + tautology + piggy + hex + inference + semicolon + alligators);
 
 
@@ -158,7 +158,7 @@ public class SQLI {
         double hexThreat = hex * HEX;
         double inferenceThreat = inference * INFERENCE;
         double semicolonThreat = checkSemicolon() * SEMICOLON;
-        double alligatorsThreat = checkAllApostrophe() * ALLIGATORS;
+        double alligatorsThreat = checkAlligators() * ALLIGATORS;
         Collections.addAll(threatList, commentsThreat, alternateEncodingsThreat, firstApostropheThreat, statementsThreat, spacesThreat, tautologyThreat, piggyThreat, hexThreat, inferenceThreat, semicolonThreat, alligatorsThreat);
         double max = Collections.max(threatList);
         threatLevel += (commentsThreat + alternateEncodingsThreat + allApostropheThreat + firstApostropheThreat + statementsThreat + spacesThreat + tautologyThreat + piggyThreat + hexThreat + inferenceThreat + semicolonThreat + alligatorsThreat);
@@ -174,15 +174,18 @@ public class SQLI {
         threats.put(hexThreat, "Concern of users putting a hex encoded string");
         threats.put(inferenceThreat, "Concern of an inference attack");
         threats.put(semicolonThreat, "There are semicolons in this query");
-        threats.put(alligatorsThreat, "No sane human uses semicolons in their queries unless they're shifty");
+        threats.put(alligatorsThreat, "Tautology, things such as 5 > 3, 1 > 0 Waitfor 5, 1=1, 1=0, etc.");
         String largestThreat = threats.get(max);
 
-        threatLevel *= 100;
-        if (threatLevel >= 100) {
-            threatLevel =100;
+        threatLevel *= 50;
+        if (threatLevel > 100) {
+            threatLevel = 100;
         }
-
         String threatPercent = threatLevel + "%";
+
+        if (threatLevel == 0) {
+            largestThreat = "No big threats identified";
+        }
 
         return "Total threats: " + totalThreats + "" +
                 "\nThreat of SQLI Attack: " + threatPercent +

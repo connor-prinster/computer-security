@@ -14,14 +14,13 @@ import java.util.regex.Pattern;
 public class Phishing {
     private String emailAddress;
     private String emailBody;
-    private final static double SPEAR_FISHING = 0.2;
-    private final static double URLS = 0.2;
-    private final static double CONSEQUENCES = 0.2;
-    private final static double REDEMPTION = 0.15;
+    private final static double SPEAR_FISHING = 0.4;
+    private final static double URLS = 0.4;
+    private final static double REDEMPTION = 0.2;
+    private final static double CONSEQUENCES = 0.1;
     private final static double IMMEDIACY = 0.1;
     private final static double AUTHORITY = 0.1;
-    private final static double MISSPELLED = 0.05;
-    private final static int COUNT_CHECKS = 7;
+    private final static double MISSPELLED = 0.1;
 
     public Phishing(String emailAddress, String emailBody) {
         assert(SPEAR_FISHING + URLS + CONSEQUENCES + REDEMPTION + IMMEDIACY + AUTHORITY + MISSPELLED == 1);
@@ -130,8 +129,8 @@ public class Phishing {
     }
 
     private int checkPositionsOfAuthority() {
-        String reg = "(president|vice|prophet|mister|judge|caliph|centurion|chief|consort|count|countess|doctor|earl|countess|emperor|empress|esquire|squire|admiral|master|herald|highness|majesty|lady|mandarin|mayor|saint|sergeant|tsar|tsaritsa|prince|king|princess|baron|baroness|darth|bishop|pastor|rabbi|deacon|priest|cardinal|chaplain|church|priestess|pope|vicar|dalai lama|patriarch|archbishop|monk|abbess|nun|apostle|elder|reverend|chaplain|god|saint|imam|mullah|sultan|sultana|witch|priestess|druid|chairman|officer|lord)";
-        return matchCount(reg, emailBody);
+        String reg = "(president|vice|prophet|mister|judge|caliph|centurion|chief|consort|count|countess|doctor|earl|countess|emperor|empress|esquire|squire|admiral|master|herald|highness|majesty|lady|mandarin|mayor|saint|sergeant|tsar|tsaritsa|prince|king|princess|baron|baroness|darth|bishop|pastor|rabbi|deacon|priest|cardinal|chaplain|church|priestess|pope|vicar|dalai lama|patriarch|archbishop|monk|abbess|nun|apostle|elder|reverend|chaplain|god|saint|imam|mullah|sultan|sultana|witch|priestess|druid|chairman|officer|lord|supreme|leader)";
+        return matchCount(reg, emailBody) > 0 ? 1 : 0;
     }
 
     private int CheckConsequences() {
@@ -196,10 +195,19 @@ public class Phishing {
         double urlThreat = url * URLS;
         double misspelledThreat = misspelled * MISSPELLED;
 
+        threatLevel += positionsOfAuthorityThreat;
+        threatLevel += spearFishingThreat;
+        threatLevel += consequencesThreat;
+        threatLevel += redemptionThreat;
+        threatLevel += immediacyThreat;
+        threatLevel += urlThreat;
+        threatLevel += misspelledThreat;
+
         ArrayList<Double> threatList = new ArrayList<>();
         Collections.addAll(threatList, positionsOfAuthorityThreat,spearFishingThreat, consequencesThreat, redemptionThreat, immediacyThreat);
-        double max = Collections.max(threatList);
         Map<Double, String> threats = new HashMap<>();
+
+        double max = Collections.max(threatList);
         threats.put(positionsOfAuthorityThreat, "Positions of Authority");
         threats.put(spearFishingThreat, "Spear Fishing");
         threats.put(consequencesThreat, "Threat of Consequences");
@@ -212,18 +220,14 @@ public class Phishing {
             largestThreat = "nothing";
         }
 
-        threatLevel += positionsOfAuthorityThreat;
-        threatLevel += spearFishingThreat;
-        threatLevel += consequencesThreat;
-        threatLevel += redemptionThreat;
-        threatLevel += immediacyThreat;
-        threatLevel += urlThreat;
-        threatLevel += misspelledThreat;
         threatLevel *= 100;
-        int threatPercent = ((int)threatLevel / COUNT_CHECKS);
+        if(threatLevel >= 100) {
+            threatLevel = 100;
+        }
+//        int threatPercent = ((int)threatLevel / COUNT_CHECKS);
 
         return "Total threats: " + totalThreats + "" +
-                "\nThreat of phishing: " + threatPercent + "%" +
+                "\nThreat of phishing: " + threatLevel + "%" +
                 "\nThe largest threat is " + largestThreat + "\n";
     }
 }
