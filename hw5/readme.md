@@ -14,7 +14,7 @@
 * char() - done
 * union - done
 * -- - done
-* semicolon
+* semicolon - done
 * tautology - done
 * initial apostrophe - done
 * illogical/illegal (convert(), ) - done?

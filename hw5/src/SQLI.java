@@ -30,8 +30,10 @@ public class SQLI {
         int count = 0;
         while(m.find()) {
             String[] split = m.group().split("=");
-            if(split[0].trim().equals(split[1].trim())) {
-                count++;
+            if(split.length > 1) {
+                if(split[0].trim().equals(split[1].trim())) {
+                    count++;
+                }
             }
         }
         System.out.println(count);
@@ -115,8 +117,12 @@ public class SQLI {
         return matchCount(pattern);
     }
 
-    public int containsInterference() {
+    public int containsInference() {
         return matchCount("WAITFOR") + matchCount("[0|1]=[0|1][\\w\\s]+[0|1]=[0|1]");
+    }
+
+    public int checkSemicolon() {
+        return matchCount(";");
     }
 
     public String returnThreatString() {
@@ -185,11 +191,17 @@ public class SQLI {
         }
 
 //        Collections.addAll(threatList, commentsThreat,alternateEncodingsThreat, firstApostropheThreat, allApostropheThreat, statementsThreat, spacesThreat, tautologyThreat, piggyThreat);
-        double max = Collections.max(threatList);
+        double max = 0;
+        if(threatList.size() != 0) {
+            max = Collections.max(threatList);
+        }
         String largestThreat = threats.get(max);
 
         threatLevel *= 100;
-        int threatPercent = ((int)threatLevel / totalThreats);
+        int threatPercent = 0;
+        if(totalThreats != 0) {
+            threatPercent = ((int)threatLevel / totalThreats);
+        }
 
         return "Total threats: " + totalThreats + "" +
                 "\nThreat of SQLI: " + threatPercent + "%" +
