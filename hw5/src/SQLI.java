@@ -166,7 +166,7 @@ public class SQLI {
         threats.put(commentsThreat, "Comments (\"--\")");
         threats.put(alternateEncodingsThreat, "Alternate Encodings ex. CHAR(), CONVERT(), ASCII(), EXEC(), EXEC(CHAR()), SUBSTRING()");
         threats.put(firstApostropheThreat, "Apostrophe at the beginning of the input");
-        threats.put(allApostropheThreat, "Apostrophies throughout the input that could close the input early");
+        threats.put(allApostropheThreat, "Apostrophes throughout the input that could close the input early");
         threats.put(statementsThreat, "Standard SQL Statements such as SELECT, FROM, WHERE, UNION, UPDATE, DROP, etc.");
         threats.put(spacesThreat, "Spaces throughout the input");
         threats.put(tautologyThreat, "Tautology, such as 1=1, 5>A, etc.");
