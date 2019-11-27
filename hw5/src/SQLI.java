@@ -7,14 +7,14 @@ import java.util.regex.Pattern;
 
 public class SQLI {
     private String query;
-    private final static double COMMENTS = 0.8;
-    private final static double ALTERNATE_ENCODINGS = 0.8;
-    private final static double FIRST_APOSTROPHE = 0.8;
+    private final static double COMMENTS = 0.9;
+    private final static double ALTERNATE_ENCODINGS = 0.9;
+    private final static double FIRST_APOSTROPHE = 0.9;
     private final static double ALL_APOSTROPHE = 0.1;
-    private final static double STATEMENTS = 0.8;
-    private final static double SPACES = 0.4;
-    private final static double TAUTOLOGY = 0.8;
-    private final static double PIGGY = 0.8;
+    private final static double STATEMENTS = 0.9;
+    private final static double SPACES = 0.1;
+    private final static double TAUTOLOGY = 0.9;
+    private final static double PIGGY = 0.9;
 
     public SQLI(String query) {
         this.query = query.toUpperCase();
@@ -195,6 +195,10 @@ public class SQLI {
         int threatPercent = 0;
         if(totalThreats != 0) {
             threatPercent = ((int)threatLevel / totalThreats);
+        }
+
+        if (threatPercent > 100) {
+            threatPercent = 100;
         }
 
         return "Total threats: " + totalThreats + "" +
