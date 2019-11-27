@@ -21,8 +21,7 @@ public class SQLI {
     }
 
     public int checkUnion() {
-        String union = "UNION";
-        return matchCount(union);
+        return matchCount("UNION");
     }
     
     public int checkTautology() {
@@ -55,13 +54,11 @@ public class SQLI {
     }
 
     public int checkSelect() {
-        String select = "SELECT";
-        return matchCount(select);
+        return matchCount("SELECT");
     }
 
     public int checkUpdate() {
-        String update = "UPDATE";
-        return matchCount(update);
+        return matchCount("UPDATE");
     }
 
     public int checkDrop() {
@@ -88,13 +85,11 @@ public class SQLI {
     }
 
     public int checkAscii() {
-        String asc = "ASCII(\\w*)";
-        return matchCount(asc);
+        return matchCount("ASCII(\\w*)");
     }
 
     public int checkSubstring() {
-        String sub = "SUBSTRING(\\w*)";
-        return matchCount(sub);
+        return matchCount("SUBSTRING(\\w*)");
     }
 
     private int matchCount(String regex) {
@@ -106,8 +101,7 @@ public class SQLI {
     }
 
     public int containsComments() {
-        String comment = "--";
-        return matchCount(comment);
+        return matchCount("--");
     }
 
     public int containsHex() {
