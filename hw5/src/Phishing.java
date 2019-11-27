@@ -21,7 +21,7 @@ public class Phishing {
     private final static double AUTHORITY = 0.1;
     private final static double REDEMPTION = 0.1;
     private final static double MISSPELLED = 0.01;
-    private final static int COUNT_CHECKS = 6;
+    private final static int COUNT_CHECKS = 7;
 
     public Phishing(String emailAddress, String emailBody) {
         this.emailAddress = emailAddress;
