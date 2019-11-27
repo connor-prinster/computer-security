@@ -58,6 +58,8 @@ public class Phishing {
             if (url.matches("[^a-zA-Z/.]")) {     // look for numbers and special characters in the domain name
                 count++;
             }
+            String reg = "(login|update|verify)";
+            count += matchCount(reg, url);
         }
 
         return count;
