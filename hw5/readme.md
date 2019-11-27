@@ -1,6 +1,13 @@
 # Homework 5
 
-# Phishing
+## To Run
+There are two GUIs
+* PhishingGUI.java
+    * checks those under the Phishing section below
+* SQLIGUI.java
+    * checks those under the SQLI section below
+
+## Phishing
 
 * royalty or religious figures
 * immediacy
@@ -9,22 +16,21 @@
 * sketchy urls
 * redeem
 
-# SQLI
-# NOTE TO SELVES PERCENTAGE IS NOT RIGHT IN SQLI
-* char() - done
-* union - done
-* -- - done
-* semicolon - done
-* tautology - done
-* initial apostrophe - done
-* illogical/illegal (convert(), ) - done?
-* empty space - done
-* update - done
-* select - done
-* from - done
+## SQLI
+* char() 
+* union 
+* -- 
+* semicolon 
+* tautology 
+* initial apostrophe 
+* illogical/illegal (convert(), )
+* empty space 
+* update 
+* select 
+* from 
 * >, < 
-* ASCII() - done
-* substring() - done
-* piggy-backed (admin' --, '; drop table users --) - done?
-* inference (putting 1=0 then 1=1, or ASCII(SUBSTRIN()) > X WAITFOR 5 --) -- done-ish
-* alternate encodings (legalUser'; exec(char(0x1098314e)) --, legalUser';exec(SHUTDOWN)) - done?
+* ASCII() 
+* substring() 
+* piggy-backed (admin' --, '; drop table users --)
+* inference (putting 1=0 then 1=1, or ASCII(SUBSTRIN()) > X WAITFOR 5 --) --ish
+* alternate encodings (legalUser'; exec(char(0x1098314e)) --, legalUser';exec(SHUTDOWN))
