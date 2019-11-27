@@ -119,6 +119,10 @@ public class SQLI {
         return matchCount(";");
     }
 
+    public int checkAlligators() {
+        return matchCount("<") + matchCount(">");
+    }
+
     public String returnThreatString() {
         int totalThreats = 0;
         int comments = containsComments();
